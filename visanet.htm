@@ -6,7 +6,7 @@
 				var x=document.getElementById(textBox1).value;
 				var sum=0;
 				sum=(Number(x)) - ((Number(x))*0.05) - ((Number(x)) / 1.12 * 0.12 * 0.15);
-				alert("Se depositarán: Q" + sum + " \n Comision: Q" + ((Number(x))*0.05) + " \n Retención Q" + ((Number(x)) / 1.12 * 0.12 * 0.15));
+				alert("Se depositarán: Q" + sum + " \n Comision: Q" + ((Number(x))*0.05).toFixed(2) + " \n Retención Q" + ((Number(x)) / 1.12 * 0.12 * 0.15));
 			}
 		</script>
 	</head>
