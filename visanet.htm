@@ -5,14 +5,14 @@
 			function addTwoNumbers(textBox1, textBox2){
 				var x=document.getElementById(textBox1).value;
 				var sum=0;
-				sum=(Number(x))*0.05;
-				alert("COM is: " + sum);
+				sum=(Number(x)) - (((Number(x))*0.05) - ((Number(x)) / 1.12 * 0.12 * 0.15);
+				alert("Se depositarán: Q" + sum);
 			}
 		</script>
 	</head>
 <body>
-	<h1>Add two integer numbers using JavaScript.</h1>
-	<b>Enter first Number: </b><br>
+	<h1>CALCULADORA VISANET</h1>
+	<b>Ingrese MONTO: </b><br>
 	<input type="text" id="textIn1"/><br>
 	<input type="button" id="btnSum" value="Calculate SUM" onClick="addTwoNumbers('textIn1')"/>
 </body>
