@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<style type="text/css">
+		body {color: white; background: black;}
+		div {text-align: center; font-size: 1000%;}
+                </style>
+		<title>VisaCuotas</title>
+		<script type="text/javascript">
+			function addTwoNumbers(textBox1, textBox2){
+				var x=document.getElementById(textBox1).value;
+				var sum=0;
+				sum=((Number(x)) * 0.079414) + ((Number(x));
+				alert("Debe cobrarse: Q" + (sum).toFixed(2) + " \n Comision: Q" + ((Number(x))*0.079414).toFixed(2) + " \n VISACUOTAS: Q" + ((sum)/3).toFixed(2);
+			}
+		</script>
+	</head>
+<body>
+<center>
+	<h1>CALCULADORA VISACUOTAS</h1>
+	<b>MONTO ESPERADO: </b><br>
+	<input type="text" id="textIn1"/><br>
+	<input type="button" id="btnSum" value="Calcular" onClick="addTwoNumbers('textIn1')"/>
+</center>
+</body>
+
+</html>
