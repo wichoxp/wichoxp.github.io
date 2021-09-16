@@ -11,13 +11,14 @@
 				var x=document.getElementById(textBox1).value;
 				var sum=0;
 				sum=(((Number(x)) * 0.07074569) + (Number(x)));
-				alert("Debe cobrarse: Q" + (sum).toFixed(2) + " \n Comision: Q" + (Number(x)*0.07074569).toFixed(2));
+				alert("Debe cobrarse: Q" + (sum).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.07074569).toFixed(2) + " \n COMISION: Q" + ((Number(x)) * 0.0575).toFixed(2));
 			}
 		</script>
 	</head>
 <body>
 <center>
 	<h1>CALCULADORA VISANET</h1>
+	<h2><i>Pago Único</i></h2>
 	<b>DEPOSITO ESPERADO: </b><br>
 	<input type="text" id="textIn1"/><br><br>
 	<input type="button" id="btnSum" value="Calcular" onClick="addTwoNumbers('textIn1')"/><br><br>
