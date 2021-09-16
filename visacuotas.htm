@@ -10,7 +10,7 @@
 				var x=document.getElementById(textBox1).value;
 				var sum=0;
 				sum=(((Number(x)) * 0.079414) + (Number(x)));
-				alert("MONTO A COBRAR: Q" + (sum).toFixed(2) + " \n\n3 VISACUOTAS: Q" + ((sum)/3).toFixed(2) + " \n -- COMISION: Q" + (Number(x)*0.079414).toFixed(2) + "\n -- RETENCION: Q" + ((sum)/1.12*0.12*0.15).toFixed(2));
+				alert("MONTO A COBRAR: Q" + (sum).toFixed(2) + " \n\n3 VISACUOTAS: Q" + ((sum)/3).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.079414).toFixed(2) + " \n -- COMISION: Q" + ((sum)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((sum)/1.12*0.12*0.15).toFixed(2));
 			}
 		</script>
 	</head>
