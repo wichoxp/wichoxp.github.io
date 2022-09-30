@@ -9,3 +9,5 @@ https://prensalibre-live.cdn.vustreams.com:443/live/cd8f5328-7a1c-49d9-b318-9190
 https://dslvfq5ee0geu.cloudfront.net:443/hls/canal3_480.m3u8
 #EXTINF:-1 ,NUEVOMUNDO
 https://tvlatina.live:1936/8030/8030/chunklist_w1544539849.m3u8
+#EXTINF:-1 ,CANALANTIGUA
+https://streannlivefeedlatino.cachefly.net/feedlatino1/feedlatino1/playlist.m3u8
