@@ -7,3 +7,5 @@ https://dslvfq5ee0geu.cloudfront.net:443/hls/canal7_480.m3u8
 https://prensalibre-live.cdn.vustreams.com:443/live/cd8f5328-7a1c-49d9-b318-9190858d1826/live.isml/live-audio_track_0_0_und=64000-video_track=6500000.m3u8
 #EXTINF:-1 ,CANAL3
 https://dslvfq5ee0geu.cloudfront.net:443/hls/canal3_480.m3u8
+#EXTINF:-1 ,NUEVOMUNDO
+https://tvlatina.live:1936/8030/8030/chunklist_w1544539849.m3u8
