@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<style type="text/css">
+		body {color: white; background: black;}
+		div {text-align: center; font-size: 1000%;}
+		html {zoom: 250%;}
+                </style>
+		<link rel="icon" href="https://wichoxp.github.io/calculator.png">
+		<title>NeoCuotas</title>
+		<script type="text/javascript">
+			function addTwoNumbers(textBox1, textBox2){
+				var x=document.getElementById(textBox1).value;
+				var ctd=0;
+				var sum=0;
+				var sum2=0;
+				var sum3=0;
+				ctd=(((Number(x)) * 0.065043742875) + (Number(x))); //contado 0.065043742875 (ANTES 0.070748081)
+				sum=(((Number(x)) * 0.07941481) + (Number(x)));
+				sum2=(((Number(x)) * 0.0941773895) + (Number(x)));
+				sum3=(((Number(x)) * 0.097176089) + (Number(x)));
+				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.065043742875).toFixed(2) + // (ANTES 0.070748081)
+				      "\n\nMONTO A COBRAR 3 VC: Q" + (sum).toFixed(2) + " \n 3 VISACUOTAS: Q" + ((sum)/3).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.07941481).toFixed(2) + <!-- " \n -- COMISION: Q" + ((sum)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((sum)/1.12*0.12*0.15).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 6 VC: Q" + (sum2).toFixed(2) + " \n 6 VISACUOTAS: Q" + ((sum2)/6).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.0941773895).toFixed(2) + <!-- + " \n -- COMISION: Q" + ((sum2)*0.07).toFixed(2) + "\n -- RETENCION: Q" + ((sum2)/1.12*0.12*0.15).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 10 VC: Q" + (sum3).toFixed(2) + " \n 10 VISACUOTAS: Q" + ((sum3)/10).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.097176089).toFixed(2)
+				     );
+			}
+		</script>
+	</head>
+<body>
+<center>
+	<h1>CALCULADORA NeoNet</h1>
+	<h2><i>Contado y NeoCuotas</i></h2>
+	<b>DEPOSITO ESPERADO: </b><br>
+	<input style="background-color: gold;" type="text" id="textIn1"/><br><br>
+	<input type="button" id="btnSum" value="Calcular" onClick="addTwoNumbers('textIn1')"/>
+	<script>
+	var input = document.getElementById("textIn1");
+	input.addEventListener("keypress", function(event) {
+  	if (event.key === "Enter") {
+    	event.preventDefault();
+    	document.getElementById("btnSum").click();
+  	}
+	});
+	</script>
+</center>
+</body>
+
+</html>
