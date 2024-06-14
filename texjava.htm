@@ -1,26 +1,23 @@
-<iframe src="https://apps.transexpress.com.gt/entregas_locales/" id="iframe"></iframe>
+<!DOCTYPE html>
+<html>
 
-<script>
-  iframe.onload = function() {
-    // podemos obtener la referencia a la ventana interior
-    let iframeWindow = iframe.contentWindow; // OK
-    try {
-      // ...pero no al documento que contiene
-      let doc = iframe.contentDocument; // ERROR
-    } catch(e) {
-      alert(e); // Error de seguridad (otro origen)
-    }
+<body style="text-align:center;">
+	<iframe id="gfgFrame" src=""
+		style="height: 50vh; width: 600px;">
+	</iframe>
 
-    // tampoco podemos LEER la URL de la página en iframe
-    try {
-      // No se puede leer la URL del objeto Location
-      let href = iframe.contentWindow.location.href; // ERROR
-    } catch(e) {
-      alert(e); // Error de seguridad
-    }
-    // ...¡podemos ESCRIBIR en location (y así cargar algo más en el iframe)!
-    iframe.contentWindow.location = '/'; // OK
+	<p>Click to visit GeeksForGeeks website</p>
 
-    // iframe.onload = null; // borra el controlador para no ejecutarlo después del cambio de ubicación
-  };
-</script>
+	<button onclick="navigate()">
+		Click it
+	</button>
+
+	<script>
+		function navigate() {
+			document.getElementById("gfgFrame").src
+				= "https://apps.transexpress.com.gt/entregas_locales/";
+		}
+	</script>
+</body>
+
+</html>
