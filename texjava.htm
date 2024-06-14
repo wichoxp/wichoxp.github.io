@@ -1,18 +1,26 @@
-<html>
-    <script language="javascript"> 
-  <!--    
-    function fun_iFrameWrite(par_ID_iFrame, par_URL){
-       document.getElementById(par_ID_iFrame).src = par_URL;
+<iframe src="https://apps.transexpress.com.gt/entregas_locales/" id="iframe"></iframe>
+
+<script>
+  iframe.onload = function() {
+    // podemos obtener la referencia a la ventana interior
+    let iframeWindow = iframe.contentWindow; // OK
+    try {
+      // ...pero no al documento que contiene
+      let doc = iframe.contentDocument; // ERROR
+    } catch(e) {
+      alert(e); // Error de seguridad (otro origen)
     }
-  -->
-  </script> 
 
-<body onload="javascript:fun_iFrameWrite('iFrame_SQL','http://www.google.com')">
-    
-    <iframe id="iFrame_SQL" name="iFrame_SQL" width=100% height=85%></iframe><br />
-   
-    <a href="#" onclick="javascript:fun_iFrameWrite('iFrame_SQL','http://www.yahoo.com')">Update Iframe a YAHOO</a><br>
-    <a href="#" onclick="javascript:fun_iFrameWrite('iFrame_SQL','http://www.google.com')">Update Iframe a GOOGLE</a><br>
-</body>
+    // tampoco podemos LEER la URL de la página en iframe
+    try {
+      // No se puede leer la URL del objeto Location
+      let href = iframe.contentWindow.location.href; // ERROR
+    } catch(e) {
+      alert(e); // Error de seguridad
+    }
+    // ...¡podemos ESCRIBIR en location (y así cargar algo más en el iframe)!
+    iframe.contentWindow.location = '/'; // OK
 
-</html>
+    iframe.onload = null; // borra el controlador para no ejecutarlo después del cambio de ubicación
+  };
+</script>
