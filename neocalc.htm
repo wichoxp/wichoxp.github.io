@@ -11,15 +11,18 @@
 			function addTwoNumbers(textBox1, textBox2){
 				var x=document.getElementById(textBox1).value;
 				var ctd=0;
-				var sum=0;
+				var vc2=0;
+				var vc3=0;
 				var sum2=0;
 				var sum3=0;
-				ctd=(((Number(x)) * 0.065043742875) + (Number(x))); //contado 0.065043742875 (ANTES 0.070748081)
-				sum=(((Number(x)) * 0.07941481) + (Number(x)));
+				ctd=(((Number(x)) * 0.06504374286802) + (Number(x))); //contado 0.06504374286802 (ANTES 0.070748081)
+				vc2=(((Number(x)) * 0.07361963190185) + (Number(x))); //2 VISACUOTAS (0.07361963190185)
+				vc3=(((Number(x)) * 0.07941481) + (Number(x))); //3 VISACUOTAS
 				sum2=(((Number(x)) * 0.0941773895) + (Number(x)));
 				sum3=(((Number(x)) * 0.097176089) + (Number(x)));
 				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.065043742875).toFixed(2) + // (ANTES 0.070748081)
-				      "\n\nMONTO A COBRAR 3 VC: Q" + (sum).toFixed(2) + " \n 3 VISACUOTAS: Q" + ((sum)/3).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.07941481).toFixed(2) + <!-- " \n -- COMISION: Q" + ((sum)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((sum)/1.12*0.12*0.15).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 2 VC: Q" + (vc2).toFixed(2) + " \n 2 VISACUOTAS: Q" + ((vc2)/3).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.07361963190185).toFixed(2) +
+				      "\n\nMONTO A COBRAR 3 VC: Q" + (vc3).toFixed(2) + " \n 3 VISACUOTAS: Q" + ((vc3)/3).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.07941481).toFixed(2) + <!-- " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) + -->
 				      "\n\nMONTO A COBRAR 6 VC: Q" + (sum2).toFixed(2) + " \n 6 VISACUOTAS: Q" + ((sum2)/6).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.0941773895).toFixed(2) + <!-- + " \n -- COMISION: Q" + ((sum2)*0.07).toFixed(2) + "\n -- RETENCION: Q" + ((sum2)/1.12*0.12*0.15).toFixed(2) -->
 				      "\n\nMONTO A COBRAR 10 VC: Q" + (sum3).toFixed(2) + " \n 10 VISACUOTAS: Q" + ((sum3)/10).toFixed(2) + " \n VISANET: Q" + (Number(x)*0.097176089).toFixed(2)
 				     );
