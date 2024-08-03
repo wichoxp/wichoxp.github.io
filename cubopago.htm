@@ -17,7 +17,7 @@
 				var ret=0;
 				com=(((Number(x)) * 0.0499)); //COMISION 4.99%
 				ivc=(((com) * 1.12)); //IVA SOBRE COMISION
-        			ret=(((Number(x)) - (Number(x) / 1.12)) * 0.15);
+        			ret=(((Number(x)) - ((Number(x)) / 1.12)) * 0.15);
 				ctd=(((Number(x)) - (ivc) - (ret))); //CONTADO 0.077539097736
 				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) +
 				      "\n\nCOMISION: Q" + (com).toFixed(2) +
