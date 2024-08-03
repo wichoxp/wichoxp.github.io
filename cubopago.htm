@@ -19,10 +19,10 @@
 				ivc=(((com).toFixed(2) * 1.12)); //IVA SOBRE COMISION
         			ret=(((Number(x))-(Number(x)/1.12))*0.15);
 				ctd=(((Number(x)) - (ivc).toFixed(2) - (ret).toFixed(2))); //CONTADO 0.077539097736
-				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.077539097736).toFixed(2) -->
-				      "\n\nCOMISION: Q" + (com).toFixed(2) + " \n 2 CUOTAS: Q" + ((vc2)/2).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07361963190185).toFixed(2) -->
-				      "\n\nIVA SOBRE COMISION: Q" + (ivc).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07941403238245).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
-				      "\n\nRETENCIO: Q" + (ret).toFixed(2) + " \n 6 CUOTAS: Q" + ((vc6)/6).toFixed(2));
+				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) +
+				      "\n\nCOMISION: Q" + (com).toFixed(2) +
+				      "\n\nIVA SOBRE COMISION: Q" + (ivc).toFixed(2) +
+				      "\n\nRETENCION: Q" + (ret).toFixed(2)");
 			}
 		</script>
 	</head>
