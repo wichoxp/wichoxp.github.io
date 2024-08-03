@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<style type="text/css">
+		body {color: white; background: DarkCyan;}
+		div {text-align: center; font-size: 1000%;}
+		html {zoom: 250%;}
+		#textIn1 {width:200px; font-size:48pt; text-align:center;}
+                </style>
+		<link rel="icon" href="https://wichoxp.github.io/calculator.png">
+		<title>CuboCuotas</title>
+		<script type="text/javascript">
+			function addTwoNumbers(textBox1, textBox2){
+				var x=document.getElementById(textBox1).value;
+				var ctd=0;
+				var com=0;
+				var ivc=0;
+				var ret=0;
+				var vc10=0;
+        var vc12=0;
+        var vc15=0;
+        var vc18=0;
+				com=(((Number(x)) * 0.0499)); //COMISION 4.99%
+				ivc=(((com).toFixed(2) * 1.12)); //IVA SOBRE COMISION
+        ret=(((Number(x))-(Number(x)/1.12))*0.15)
+				ctd=(((Number(x)) - (ivc).toFixed(2) - (ret).toFixed(2))); //CONTADO 0.077539097736
+				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.077539097736).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 2 CTS: Q" + (vc2).toFixed(2) + " \n 2 CUOTAS: Q" + ((vc2)/2).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07361963190185).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 3 CTS: Q" + (vc3).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07941403238245).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 6 CTS: Q" + (vc6).toFixed(2) + " \n 6 CUOTAS: Q" + ((vc6)/6).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.09417741305200).toFixed(2) + " \n -- COMISION: Q" + ((vc6)*0.07).toFixed(2) + "\n -- RETENCION: Q" + ((vc6)/1.12*0.12*0.15).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 10 CTS: Q" + (vc10).toFixed(2) + " \n 10 CUOTAS: Q" + ((vc10)/10).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0971786833856).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 12 CTS: Q" + (vc12).toFixed(2) + " \n 12 CUOTAS: Q" + ((vc12)/12).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1062821019360).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 15 CTS: Q" + (vc15).toFixed(2) + " \n 15 CUOTAS: Q" + ((vc15)/15).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.13131313131313).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 18 CTS: Q" + (vc18).toFixed(2) + " \n 18 CUOTAS: Q" + ((vc18)/18).toFixed(2) <!-- " \n VISANET: Q" + (Number(x)*0.15750310045475).toFixed(2) -->
+				     );
+			}
+		</script>
+	</head>
+<body>
+<center>
+	<h1>CALCULADORA CUBOPAGOS</h1>
+	<h2><i>Contado y CuboCuotas</i></h2>
+	<b>DEPOSITO ESPERADO: </b><br>
+	<input style="background-color: gold;" type="text" id="textIn1" autofocus /><br><br>
+	<input type="button" id="btnSum" value="Calcular" onClick="addTwoNumbers('textIn1')"/>
+	<script>
+	var input = document.getElementById("textIn1");
+	input.addEventListener("keypress", function(event) {
+  	if (event.key === "Enter") {
+    	event.preventDefault();
+    	document.getElementById("btnSum").click();
+  	}
+	});
+	</script>
+	<h6>https://plu.sh/cubocalc</h6>
+</center>
+</body>
+</html>
