@@ -20,8 +20,8 @@
         var vc15=0;
         var vc18=0;
 				ctd=(((Number(x)) * 0.0499)); //COMISION
-				vc2=(ctd * 1.12); //2 VISACUOTAS (0.109818084965)
-				vc3=(((Number(x)) * 0.116758719492) + (Number(x))); //3 VISACUOTAS
+				vc2=(ctd * 1.12); //IVA POR COMISION
+				vc3=(((Number(x)) - ((Number(x)) / 1.12) * 0.15)); //RETENCION
 				vc6=(((Number(x)) * 0.138111450377) + (Number(x))); //6 VISACUOTAS
 				vc10=(((Number(x)) * 0.1424803575) + (Number(x))); //10 VISACUOTAS
 				vc12=(((Number(x)) * 0.154296456315) + (Number(x))); //12 VISACUOTAS
@@ -29,7 +29,7 @@
 				vc18=(((Number(x)) * 0.21724311823) + (Number(x))); //18 VISACUOTAS
 				alert("COMISION: Q" + (ctd).toFixed(2) +
 				      "\n\nIVA POR COMISION: Q" + (vc2).toFixed(2) + " \n 2 CUOTAS: Q" + ((vc2)/2).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07361963190185).toFixed(2) -->
-				      "\n\nMONTO A COBRAR 3 CTS: Q" + (vc3).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07941403238245).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
+				      "\n\nRETENCION: Q" + (vc3).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07941403238245).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
 				      "\n\nMONTO A COBRAR 6 CTS: Q" + (vc6).toFixed(2) + " \n 6 CUOTAS: Q" + ((vc6)/6).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.09417741305200).toFixed(2) + " \n -- COMISION: Q" + ((vc6)*0.07).toFixed(2) + "\n -- RETENCION: Q" + ((vc6)/1.12*0.12*0.15).toFixed(2) -->
 				      "\n\nMONTO A COBRAR 10 CTS: Q" + (vc10).toFixed(2) + " \n 10 CUOTAS: Q" + ((vc10)/10).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0971786833856).toFixed(2) + -->
 				      "\n\nMONTO A COBRAR 12 CTS: Q" + (vc12).toFixed(2) + " \n 12 CUOTAS: Q" + ((vc12)/12).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1062821019360).toFixed(2) + -->
