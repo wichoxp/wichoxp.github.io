@@ -16,9 +16,10 @@
 				var vc3=0;
 				var vc6=0;
 				var vc10=0;
-        var vc12=0;
-        var vc15=0;
-        var vc18=0;
+        			var vc12=0;
+        			var vc15=0;
+        			var vc18=0;
+				var vc24=0;
 				ctd=(((Number(x)) * 0.077539097736) + (Number(x))); //CONTADO 0.077539097736
 				vc2=(((Number(x)) * 0.109818084965) + (Number(x))); //2 VISACUOTAS (0.109818084965)
 				vc3=(((Number(x)) * 0.116758719492) + (Number(x))); //3 VISACUOTAS
@@ -27,6 +28,7 @@
 				vc12=(((Number(x)) * 0.154296456315) + (Number(x))); //12 VISACUOTAS
 				vc15=(((Number(x)) * 0.184934405417) + (Number(x))); //15 VISACUOTAS
 				vc18=(((Number(x)) * 0.21724311823) + (Number(x))); //18 VISACUOTAS
+				vc24=(((Number(x)) * 0.235946406539) + (Number(x))); //24 VISACUOTAS
 				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.077539097736).toFixed(2) -->
 				      "\n\nMONTO A COBRAR 2 CTS: Q" + (vc2).toFixed(2) + " \n 2 CUOTAS: Q" + ((vc2)/2).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07361963190185).toFixed(2) -->
 				      "\n\nMONTO A COBRAR 3 CTS: Q" + (vc3).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.07941403238245).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
@@ -34,7 +36,8 @@
 				      "\n\nMONTO A COBRAR 10 CTS: Q" + (vc10).toFixed(2) + " \n 10 CUOTAS: Q" + ((vc10)/10).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0971786833856).toFixed(2) + -->
 				      "\n\nMONTO A COBRAR 12 CTS: Q" + (vc12).toFixed(2) + " \n 12 CUOTAS: Q" + ((vc12)/12).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1062821019360).toFixed(2) + -->
 				      "\n\nMONTO A COBRAR 15 CTS: Q" + (vc15).toFixed(2) + " \n 15 CUOTAS: Q" + ((vc15)/15).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.13131313131313).toFixed(2) + -->
-				      "\n\nMONTO A COBRAR 18 CTS: Q" + (vc18).toFixed(2) + " \n 18 CUOTAS: Q" + ((vc18)/18).toFixed(2) <!-- " \n VISANET: Q" + (Number(x)*0.15750310045475).toFixed(2) -->
+				      "\n\nMONTO A COBRAR 18 CTS: Q" + (vc18).toFixed(2) + " \n 18 CUOTAS: Q" + ((vc18)/18).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.15750310045475).toFixed(2) + -->
+				      "\n\nMONTO A COBRAR 24 CTS: Q" + (vc24).toFixed(2) + " \n 24 CUOTAS: Q" + ((vc24)/24).toFixed(2) <!-- " \n VISANET: Q" + (Number(x)*0.15750310045475).toFixed(2) -->
 				     );
 			}
 		</script>
