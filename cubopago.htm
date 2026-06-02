@@ -12,7 +12,7 @@
             color: #333;
         }
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             background: #fff;
             padding: 20px;
@@ -77,12 +77,16 @@
         .text-right {
             text-align: right;
         }
+        .deposito-verde {
+            color: #28a745;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Calculadora de Depósitos y Cuotas - CUBO PAGO</h2>
+    <h2>Calculadora de Depósitos - CUBO PAGO</h2>
     
     <div class="form-group">
         <label for="monto">Monto cobrado en Quetzales (Q):</label>
@@ -99,8 +103,7 @@
                 <th>Comisión Base</th>
                 <th>IVA de Comisión</th>
                 <th>Total Descuento</th>
-                <th>Depósito Esperado</th>
-                <th class="text-right">Valor por Cuota</th>
+                <th class="text-right">Depósito Esperado</th>
             </tr>
         </thead>
         <tbody id="tabla-resultados">
@@ -111,15 +114,15 @@
 
 <script>
     const planes = [
-        { nombre: "De contado", tasa: 4.99, cuotas: 1 },
-        { nombre: "2 cuotas", tasa: 7.40, cuotas: 2 },
-        { nombre: "3 cuotas", tasa: 7.90, cuotas: 3 },
-        { nombre: "6 cuotas", tasa: 9.40, cuotas: 6 },
-        { nombre: "10 cuotas", tasa: 9.70, cuotas: 10 },
-        { nombre: "12 cuotas", tasa: 10.50, cuotas: 12 },
-        { nombre: "15 cuotas", tasa: 12.50, cuotas: 15 },
-        { nombre: "18 cuotas", tasa: 14.50, cuotas: 18 },
-        { nombre: "24 cuotas", tasa: 15.61, cuotas: 24 }
+        { nombre: "De contado", tasa: 4.99 },
+        { nombre: "2 cuotas", tasa: 7.40 },
+        { nombre: "3 cuotas", tasa: 7.90 },
+        { nombre: "6 cuotas", tasa: 9.40 },
+        { nombre: "10 cuotas", tasa: 9.70 },
+        { nombre: "12 cuotas", tasa: 10.50 },
+        { nombre: "15 cuotas", tasa: 12.50 },
+        { nombre: "18 cuotas", tasa: 14.50 },
+        { nombre: "24 cuotas", tasa: 15.61 }
     ];
 
     function calcularDepositos() {
@@ -134,9 +137,6 @@
             const ivaComision = comisionBase * 0.12;
             const totalDescuento = comisionBase + ivaComision;
             const depositoEsperado = monto - totalDescuento;
-            
-            const valorCuota = plan.cuotas > 1 ? (monto / plan.cuotas) : monto;
-            const textoCuota = plan.cuotas > 1 ? `Q ${valorCuota.toFixed(2)}` : "N/A (Pago único)";
 
             const fila = document.createElement('tr');
             fila.innerHTML = `
@@ -144,8 +144,7 @@
                 <td>Q ${comisionBase.toFixed(2)}</td>
                 <td>Q ${ivaComision.toFixed(2)}</td>
                 <td>Q ${totalDescuento.toFixed(2)}</td>
-                <td><strong>Q ${depositoEsperado.toFixed(2)}</strong></td>
-                <td class="text-right" style="color: #28a745; font-weight: bold;">${textoCuota}</td>
+                <td class="text-right deposito-verde">Q ${depositoEsperado.toFixed(2)}</td>
             `;
             tbody.appendChild(fila);
         });
