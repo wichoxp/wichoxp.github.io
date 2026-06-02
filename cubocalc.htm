@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Cobros y Cuotas</title>
+    <title>Calculadora de Cobros y Cuotas (Q)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +18,7 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            max-width: 750px;
             width: 100%;
         }
         h2 {
@@ -38,8 +38,12 @@
             margin-bottom: 8px;
             color: #495057;
         }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
         input[type="number"] {
-            width: 100%;
+            flex: 1;
             padding: 12px;
             font-size: 16px;
             border: 1px solid #ced4da;
@@ -51,6 +55,20 @@
             border-color: #80bdff;
             outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        .btn-limpiar {
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #6c757d;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .btn-limpiar:hover {
+            background-color: #5a6268;
         }
         table {
             width: 100%;
@@ -76,9 +94,16 @@
         .text-right {
             text-align: right;
         }
+        .monto-comision {
+            color: #dc3545;
+            font-weight: 500;
+        }
         .monto-final {
             font-weight: bold;
             color: #28a745;
+        }
+        .text-muted {
+            color: #6c757d;
         }
     </style>
 </head>
@@ -89,7 +114,10 @@
     
     <div class="form-group">
         <label for="deposito">Monto del depósito esperado:</label>
-        <input type="number" id="deposito" placeholder="Ingrese el monto que desea recibir" min="0" step="0.01" oninput="calcularMontos()">
+        <div class="input-group">
+            <input type="number" id="deposito" placeholder="Ingrese el monto que desea recibir (Q)" min="0" step="0.01" oninput="calcularMontos()">
+            <button class="btn-limpiar" onclick="limpiarCampo()">Limpiar</button>
+        </div>
     </div>
 
     <table>
@@ -97,6 +125,7 @@
             <tr>
                 <th>Tipo de Cobro</th>
                 <th>Comisión (Base)</th>
+                <th class="text-right">Total Comisión + IVA</th>
                 <th class="text-right">Monto a Cobrar</th>
             </tr>
         </thead>
@@ -120,6 +149,11 @@
         { tipo: 'En 24 cuotas', porcentaje: 15.61 }
     ];
 
+    // Función auxiliar para formatear la moneda a Quetzales de Guatemala (es-GT)
+    function formatearQuetzales(valor) {
+        return 'Q ' + valor.toLocaleString('es-GT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
     function calcularMontos() {
         const depositoInput = document.getElementById('deposito').value;
         const deposito = parseFloat(depositoInput);
@@ -128,12 +162,13 @@
         // Limpiar la tabla previa
         tbody.innerHTML = '';
 
-        // Si el campo está vacío o no es un número válido, muestra la estructura vacía
+        // Si el campo está vacío o no es válido, muestra la estructura base vacía
         if (isNaN(deposito) || deposito <= 0) {
             tasasCobro.forEach(item => {
                 const fila = `<tr>
                     <td>${item.tipo}</td>
                     <td>${item.porcentaje.toFixed(2)}% + 12% IVA</td>
+                    <td class="text-right text-muted">-</td>
                     <td class="text-right text-muted">-</td>
                 </tr>`;
                 tbody.innerHTML += fila;
@@ -141,22 +176,34 @@
             return;
         }
 
-        // Calcular el monto a cobrar para cada escenario
+        // Calcular los valores para cada escenario
         tasasCobro.forEach(item => {
             const comisionBase = item.porcentaje / 100;
             const ivaDeComision = comisionBase * 0.12;
             const factorDeduccionTotal = comisionBase + ivaDeComision;
 
-            // Operación inversa para garantizar recibir el depósito exacto
+            // Calcular el valor total que se le debe cobrar al cliente
             const montoACobrar = deposito / (1 - factorDeduccionTotal);
+            
+            // El desglose de la comisión es la resta entre lo que se cobra y lo que se recibe
+            const totalComisionRetenida = montoACobrar - deposito;
 
             const fila = `<tr>
                 <td>${item.tipo}</td>
                 <td>${item.porcentaje.toFixed(2)}% + 12% IVA</td>
-                <td class="text-right monto-final">$ ${montoACobrar.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td class="text-right monto-comision">${formatearQuetzales(totalComisionRetenida)}</td>
+                <td class="text-right monto-final">${formatearQuetzales(montoACobrar)}</td>
             </tr>`;
             tbody.innerHTML += fila;
         });
+    }
+
+    // Nueva función para el botón de limpieza
+    function limpiarCampo() {
+        const input = document.getElementById('deposito');
+        input.value = ''; // Borra el valor numérico
+        calcularMontos(); // Resetea la tabla a su estado vacío
+        input.focus();    // Devuelve el foco del cursor al input para volver a escribir directamente
     }
 
     // Ejecución inicial para pintar la tabla vacía al cargar la página
