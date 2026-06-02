@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Comisiones CUBO PAGO Guatemala</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #0056b3;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="number"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-limpiar {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .btn-limpiar:hover {
+            background-color: #bd2130;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Depósitos y Cuotas - CUBO PAGO</h2>
+    
+    <div class="form-group">
+        <label for="monto">Monto cobrado en Quetzales (Q):</label>
+        <div class="input-container">
+            <input type="number" id="monto" placeholder="Ej. 1000" min="0" step="0.01" oninput="calcularDepositos()">
+            <button class="btn-limpiar" onclick="limpiarDatos()">Limpiar</button>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Plazo / Cuotas</th>
+                <th>Comisión Base</th>
+                <th>IVA de Comisión</th>
+                <th>Total Descuento</th>
+                <th>Depósito Esperado</th>
+                <th class="text-right">Valor por Cuota</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-resultados">
+            <!-- Los datos se generarán dinámicamente con JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const planes = [
+        { nombre: "De contado", tasa: 4.99, cuotas: 1 },
+        { nombre: "2 cuotas", tasa: 7.40, cuotas: 2 },
+        { nombre: "3 cuotas", tasa: 7.90, cuotas: 3 },
+        { nombre: "6 cuotas", tasa: 9.40, cuotas: 6 },
+        { nombre: "10 cuotas", tasa: 9.70, cuotas: 10 },
+        { nombre: "12 cuotas", tasa: 10.50, cuotas: 12 },
+        { nombre: "15 cuotas", tasa: 12.50, cuotas: 15 },
+        { nombre: "18 cuotas", tasa: 14.50, cuotas: 18 },
+        { nombre: "24 cuotas", tasa: 15.61, cuotas: 24 }
+    ];
+
+    function calcularDepositos() {
+        const montoInput = document.getElementById('monto').value;
+        const monto = parseFloat(montoInput) || 0;
+        const tbody = document.getElementById('tabla-resultados');
+        
+        tbody.innerHTML = "";
+
+        planes.forEach(plan => {
+            const comisionBase = monto * (plan.tasa / 100);
+            const ivaComision = comisionBase * 0.12;
+            const totalDescuento = comisionBase + ivaComision;
+            const depositoEsperado = monto - totalDescuento;
+            
+            const valorCuota = plan.cuotas > 1 ? (monto / plan.cuotas) : monto;
+            const textoCuota = plan.cuotas > 1 ? `Q ${valorCuota.toFixed(2)}` : "N/A (Pago único)";
+
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${plan.nombre} (${plan.tasa}%)</td>
+                <td>Q ${comisionBase.toFixed(2)}</td>
+                <td>Q ${ivaComision.toFixed(2)}</td>
+                <td>Q ${totalDescuento.toFixed(2)}</td>
+                <td><strong>Q ${depositoEsperado.toFixed(2)}</strong></td>
+                <td class="text-right" style="color: #28a745; font-weight: bold;">${textoCuota}</td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
+
+    function limpiarDatos() {
+        document.getElementById('monto').value = "";
+        calcularDepositos();
+        document.getElementById('monto').focus();
+    }
+
+    // Inicializar tabla al cargar la página
+    window.onload = calcularDepositos;
+</script>
+
+</body>
+</html>
