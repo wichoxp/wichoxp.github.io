@@ -1,65 +1,199 @@
-<html>
-	<head>
-		<style type="text/css">
-		body {color: white; background: DarkCyan;}
-		div {text-align: center; font-size: 1000%;}
-		html {zoom: 250%;}
-		#textIn1 {width:200px; font-size:48pt; text-align:center;}
-                </style>
-		<link rel="icon" href="https://wichoxp.github.io/calculator.png">
-		<title>CuboCuotas</title>
-		<script type="text/javascript">
-			function addTwoNumbers(textBox1, textBox2){
-				var x=document.getElementById(textBox1).value;
-				var ctd=0;
-				var vc2=0;
-				var vc3=0;
-				var vc6=0;
-				var vc10=0;
-        			var vc12=0;
-        			var vc15=0;
-        			var vc18=0;
-				var vc24=0;
-				ctd=(((Number(x)) * 0.0559) + (Number(x))); //CONTADO 0.0559
-				vc2=(((Number(x)) * 0.0829) + (Number(x))); //2 VISACUOTAS (0.109818084965)
-				vc3=(((Number(x)) * 0.0885) + (Number(x))); //3 VISACUOTAS
-				vc6=(((Number(x)) * 0.1053) + (Number(x))); //6 VISACUOTAS
-				vc10=(((Number(x)) * 0.1086) + (Number(x))); //10 VISACUOTAS
-				vc12=(((Number(x)) * 0.1176) + (Number(x))); //12 VISACUOTAS
-				vc15=(((Number(x)) * 0.1400) + (Number(x))); //15 VISACUOTAS
-				vc18=(((Number(x)) * 0.1624) + (Number(x))); //18 VISACUOTAS
-				vc24=(((Number(x)) * 0.1748) + (Number(x))); //24 VISACUOTAS
-				alert("MONTO COBRO CONTADO: Q" + (ctd).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0559).toFixed(2) -->
-				      "\n\nMONTO A COBRAR 2 CTS: Q" + (vc2).toFixed(2) + " \n 2 CUOTAS: Q" + ((vc2)/2).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0829).toFixed(2) -->
-				      "\n\nMONTO A COBRAR 3 CTS: Q" + (vc3).toFixed(2) + " \n 3 CUOTAS: Q" + ((vc3)/3).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.0885).toFixed(2) + " \n -- COMISION: Q" + ((vc3)*0.0575).toFixed(2) + "\n -- RETENCION: Q" + ((vc3)/1.12*0.12*0.15).toFixed(2) -->
-				      "\n\nMONTO A COBRAR 6 CTS: Q" + (vc6).toFixed(2) + " \n 6 CUOTAS: Q" + ((vc6)/6).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1053).toFixed(2) + " \n -- COMISION: Q" + ((vc6)*0.07).toFixed(2) + "\n -- RETENCION: Q" + ((vc6)/1.12*0.12*0.15).toFixed(2) -->
-				      "\n\nMONTO A COBRAR 10 CTS: Q" + (vc10).toFixed(2) + " \n 10 CUOTAS: Q" + ((vc10)/10).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1086).toFixed(2) + -->
-				      "\n\nMONTO A COBRAR 12 CTS: Q" + (vc12).toFixed(2) + " \n 12 CUOTAS: Q" + ((vc12)/12).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1176).toFixed(2) + -->
-				      "\n\nMONTO A COBRAR 15 CTS: Q" + (vc15).toFixed(2) + " \n 15 CUOTAS: Q" + ((vc15)/15).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1400).toFixed(2) + -->
-				      "\n\nMONTO A COBRAR 18 CTS: Q" + (vc18).toFixed(2) + " \n 18 CUOTAS: Q" + ((vc18)/18).toFixed(2) + <!-- " \n VISANET: Q" + (Number(x)*0.1624).toFixed(2) + -->
-				      "\n\nMONTO A COBRAR 24 CTS: Q" + (vc24).toFixed(2) + " - 24 CUOTAS: Q" + ((vc24)/24).toFixed(2)
-				     );
-			}
-		</script>
-	</head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cobros Avanzada - Cubo Pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        input[type="number"] {
+            width: 60%;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #0056b3;
+            border-radius: 6px;
+            text-align: center;
+            outline: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+            font-size: 14px;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .monto-comision {
+            color: #dc3545;
+            font-weight: 500;
+        }
+        .monto-cobrar {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 16px;
+        }
+        small {
+            color: #666;
+            display: block;
+        }
+    </style>
+</head>
 <body>
-<center>
-	<h1>CALCULADORA CUBOPAGOS</h1>
-	<h2><i>Contado y CuboCuotas</i></h2>
-	<b>DEPOSITO ESPERADO: </b><br>
-	<input style="background-color: gold;" type="text" id="textIn1" autofocus /><br><br>
-	<input type="button" id="btnSum" value="Calcular" onClick="addTwoNumbers('textIn1')"/>
-	<script>
-	var input = document.getElementById("textIn1");
-	input.addEventListener("keypress", function(event) {
-  	if (event.key === "Enter") {
-    	event.preventDefault();
-    	document.getElementById("btnSum").click();
-  	}
-	});
-	</script>
-	<h6>https://plu.sh/cubocalc</h6>
-	<a href="../cubopago.htm" style="text-align:center">MONTO A DEPOSITO</a>
-</center>
+
+<div class="container">
+    <h2>Calculadora de Cobros (Cubo)</h2>
+    <div class="subtitle">Desglose de comisiones e IVA para recibir tu depósito neto</div>
+    
+    <div class="input-group">
+        <label for="deposito">Depósito esperado (Lo que deseas recibir limpio):</label>
+        <input type="number" id="deposito" placeholder="Ej. 100.00" min="0" step="0.01" oninput="calcularMontos()">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo de Cobro (Tasa)</th>
+                <th>Comisión retenida (Cubo)</th>
+                <th>Monto a Cobrar al Cliente</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>De contado <small>5.5888% (4.99% + IVA)</small></td>
+                <td><span id="com_contado" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_contado" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>2 cuotas <small>8.29%</small></td>
+                <td><span id="com_cuotas2" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas2" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>3 cuotas <small>8.85%</small></td>
+                <td><span id="com_cuotas3" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas3" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>6 cuotas <small>10.53%</small></td>
+                <td><span id="com_cuotas6" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas6" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>10 cuotas <small>10.86%</small></td>
+                <td><span id="com_cuotas10" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas10" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>12 cuotas <small>11.76%</small></td>
+                <td><span id="com_cuotas12" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas12" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>15 cuotas <small>14.00%</small></td>
+                <td><span id="com_cuotas15" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas15" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>18 cuotas <small>16.24%</small></td>
+                <td><span id="com_cuotas18" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas18" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+            <tr>
+                <td>24 cuotas <small>17.48%</small></td>
+                <td><span id="com_cuotas24" class="monto-comision">Q0.00</span></td>
+                <td><span id="cob_cuotas24" class="monto-cobrar">Q0.00</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function calcularMontos() {
+    const deposito = parseFloat(document.getElementById('deposito').value);
+
+    if (isNaN(deposito) || deposito <= 0) {
+        limpiarCampos();
+        return;
+    }
+
+    // Definición de tasas decimales fijas
+    const tasas = {
+        contado: 0.055888,
+        cuotas2: 0.0829,
+        cuotas3: 0.0885,
+        cuotas6: 0.1053,
+        cuotas10: 0.1086,
+        cuotas12: 0.1176,
+        cuotas15: 0.1400,
+        cuotas18: 0.1624,
+        cuotas24: 0.1748
+    };
+
+    for (let llave in tasas) {
+        // 1. Calcular el monto total que se le cobra al cliente
+        const montoACobrar = deposito / (1 - tasas[llave]);
+        
+        // 2. La comisión es la diferencia exacta entre lo cobrado y lo que deseas recibir
+        const comisionRetenida = montoACobrar - deposito;
+
+        // 3. Insertar los valores calculados en las celdas correspondientes
+        document.getElementById('cob_' + llave).innerText = 'Q' + montoACobrar.toFixed(2);
+        document.getElementById('com_' + llave).innerText = 'Q' + comisionRetenida.toFixed(2);
+    }
+}
+
+function limpiarCampos() {
+    const llaves = ['contado', 'cuotas2', 'cuotas3', 'cuotas6', 'cuotas10', 'cuotas12', 'cuotas15', 'cuotas18', 'cuotas24'];
+    llaves.forEach(llave => {
+        document.getElementById('cob_' + llave).innerText = 'Q0.00';
+        document.getElementById('com_' + llave).innerText = 'Q0.00';
+    });
+}
+</script>
+
 </body>
 </html>
