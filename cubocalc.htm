@@ -3,251 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Cobros Cubo - Cuotas Dinámicas</title>
+    <title>Calculadora de Cobros y Cuotas</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
         .container {
-            max-width: 750px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
+            background-color: #ffffff;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
         }
         h2 {
+            color: #333333;
+            margin-top: 0;
             text-align: center;
-            color: #0056b3;
-            margin-bottom: 5px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
         }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
+        .form-group {
+            margin-top: 20px;
             margin-bottom: 25px;
-        }
-        .input-group {
-            margin-bottom: 25px;
-            text-align: center;
         }
         label {
-            font-weight: bold;
             display: block;
-            margin-bottom: 12px;
-            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
         }
         input[type="number"] {
-            width: 50%;
+            width: 100%;
             padding: 12px;
-            font-size: 18px;
-            border: 2px solid #0056b3;
-            border-radius: 6px;
-            text-align: center;
-            outline: none;
-            display: block;
-            margin: 0 auto 12px auto;
-        }
-        .btn-limpiar {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
             border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease-in-out;
         }
-        .btn-limpiar:hover {
-            background-color: #5a6268;
+        input[type="number"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         th, td {
-            padding: 12px;
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #dee2e6;
         }
         th {
-            background-color: #0056b3;
+            background-color: #007bff;
             color: white;
-            font-size: 14px;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
         }
         tr:hover {
-            background-color: #f9f9f9;
+            background-color: #f1f3f5;
         }
-        .destacado {
-            background-color: #eef7ff;
+        .text-right {
+            text-align: right;
         }
-        .destacado:hover {
-            background-color: #e1f0ff;
-        }
-        .badge-cuota {
-            background-color: #28a745;
-            color: white;
-            padding: 2px 6px;
-            font-size: 11px;
-            font-weight: bold;
-            border-radius: 3px;
-            display: inline-block;
-            margin-left: 5px;
-            vertical-align: middle;
-        }
-        .monto-comision {
-            color: #dc3545;
-            font-weight: 500;
-        }
-        .monto-cobrar {
+        .monto-final {
             font-weight: bold;
             color: #28a745;
-            font-size: 16px;
-        }
-        small {
-            color: #666;
-            display: block;
-            font-size: 11px;
-            margin-top: 2px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Calculadora de Cobros (Cubo)</h2>
-    <div class="subtitle">Todas las tasas incluyen la comisión base + el 12% de IVA corporativo</div>
+    <h2>Calculadora de Monto a Cobrar</h2>
     
-    <div class="input-group">
-        <label for="deposito">Depósito esperado (Lo que deseas recibir limpio):</label>
-        <input type="number" id="deposito" placeholder="Ej. 500.00" min="0" step="0.01" oninput="calcularMontos()">
-        <button class="btn-limpiar" onclick="limpiarFormulario()">Limpiar Formulario</button>
+    <div class="form-group">
+        <label for="deposito">Monto del depósito esperado:</label>
+        <input type="number" id="deposito" placeholder="Ingrese el monto que desea recibir" min="0" step="0.01" oninput="calcularMontos()">
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Tipo de Cobro (Tasa final)</th>
-                <th>Comisión + IVA Retenido</th>
-                <th>Monto a Cobrar al Cliente</th>
+                <th>Tipo de Cobro</th>
+                <th>Comisión (Base)</th>
+                <th class="text-right">Monto a Cobrar</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>De contado <small>5.5888% (4.99% + IVA)</small></td>
-                <td><span id="com_contado" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_contado" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr>
-                <td>2 cuotas <small>9.2848% (8.29% + IVA)</small></td>
-                <td><span id="com_cuotas2" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas2" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr class="destacado">
-                <td>3 cuotas <span id="badge_3" class="badge-cuota" style="display: none;"></span><small>9.9120% (8.85% + IVA)</small></td>
-                <td><span id="com_cuotas3" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas3" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr class="destacado">
-                <td>6 cuotas <span id="badge_6" class="badge-cuota" style="display: none;"></span><small>11.7936% (10.53% + IVA)</small></td>
-                <td><span id="com_cuotas6" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas6" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr>
-                <td>10 cuotas <small>12.1632% (10.86% + IVA)</small></td>
-                <td><span id="com_cuotas10" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas10" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr class="destacado">
-                <td>12 cuotas <span id="badge_12" class="badge-cuota" style="display: none;"></span><small>13.1712% (11.76% + IVA)</small></td>
-                <td><span id="com_cuotas12" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas12" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr>
-                <td>15 cuotas <small>15.6800% (14.00% + IVA)</small></td>
-                <td><span id="com_cuotas15" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas15" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr>
-                <td>18 cuotas <small>18.1888% (16.24% + IVA)</small></td>
-                <td><span id="com_cuotas18" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas18" class="monto-cobrar">Q0.00</span></td>
-            </tr>
-            <tr>
-                <td>24 cuotas <small>19.5776% (17.48% + IVA)</small></td>
-                <td><span id="com_cuotas24" class="monto-comision">Q0.00</span></td>
-                <td><span id="cob_cuotas24" class="monto-cobrar">Q0.00</span></td>
-            </tr>
+        <tbody id="tabla-resultados">
+            <!-- Las filas se generan dinámicamente -->
         </tbody>
     </table>
 </div>
 
 <script>
-function calcularMontos() {
-    const deposito = parseFloat(document.getElementById('deposito').value);
+    // Estructura de datos con las comisiones solicitadas
+    const tasasCobro = [
+        { tipo: 'De contado', porcentaje: 4.99 },
+        { tipo: 'En 2 cuotas', porcentaje: 7.40 },
+        { tipo: 'En 3 cuotas', porcentaje: 7.90 },
+        { tipo: 'En 6 cuotas', porcentaje: 9.40 },
+        { tipo: 'En 10 cuotas', porcentaje: 9.70 },
+        { tipo: 'En 12 cuotas', porcentaje: 10.50 },
+        { tipo: 'En 15 cuotas', porcentaje: 12.50 },
+        { tipo: 'En 18 cuotas', porcentaje: 14.50 },
+        { tipo: 'En 24 cuotas', porcentaje: 15.61 }
+    ];
 
-    if (isNaN(deposito) || deposito <= 0) {
-        ocultarBadges();
-        limpiarCampos();
-        return;
+    function calcularMontos() {
+        const depositoInput = document.getElementById('deposito').value;
+        const deposito = parseFloat(depositoInput);
+        const tbody = document.getElementById('tabla-resultados');
+        
+        // Limpiar la tabla previa
+        tbody.innerHTML = '';
+
+        // Si el campo está vacío o no es un número válido, muestra la estructura vacía
+        if (isNaN(deposito) || deposito <= 0) {
+            tasasCobro.forEach(item => {
+                const fila = `<tr>
+                    <td>${item.tipo}</td>
+                    <td>${item.porcentaje.toFixed(2)}% + 12% IVA</td>
+                    <td class="text-right text-muted">-</td>
+                </tr>`;
+                tbody.innerHTML += fila;
+            });
+            return;
+        }
+
+        // Calcular el monto a cobrar para cada escenario
+        tasasCobro.forEach(item => {
+            const comisionBase = item.porcentaje / 100;
+            const ivaDeComision = comisionBase * 0.12;
+            const factorDeduccionTotal = comisionBase + ivaDeComision;
+
+            // Operación inversa para garantizar recibir el depósito exacto
+            const montoACobrar = deposito / (1 - factorDeduccionTotal);
+
+            const fila = `<tr>
+                <td>${item.tipo}</td>
+                <td>${item.porcentaje.toFixed(2)}% + 12% IVA</td>
+                <td class="text-right monto-final">$ ${montoACobrar.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            </tr>`;
+            tbody.innerHTML += fila;
+        });
     }
 
-    const tasasConIva = {
-        contado: 0.055888,
-        cuotas2: 0.092848,
-        cuotas3: 0.099120,
-        cuotas6: 0.117936,
-        cuotas10: 0.121632,
-        cuotas12: 0.131712,
-        cuotas15: 0.156800,
-        cuotas18: 0.181888,
-        cuotas24: 0.195776
-    };
-
-    for (let llave in tasasConIva) {
-        const montoACobrar = deposito / (1 - tasasConIva[llave]);
-        const comisionTotal = montoACobrar - deposito;
-
-        document.getElementById('cob_' + llave).innerText = 'Q' + montoACobrar.toFixed(2);
-        document.getElementById('com_' + llave).innerText = 'Q' + comisionTotal.toFixed(2);
-
-        // Lógica de cálculo dinámico para las etiquetas verdes de mensualidades
-        if (llave === 'cuotas3') actualizarBadge(3, montoACobrar);
-        if (llave === 'cuotas6') actualizarBadge(6, montoACobrar);
-        if (llave === 'cuotas12') actualizarBadge(12, montoACobrar);
-    }
-}
-
-function actualizarBadge(meses, montoTotal) {
-    const cuotaMensual = montoTotal / meses;
-    const badge = document.getElementById('badge_' + meses);
-    badge.innerText = 'Cuota: Q' + cuotaMensual.toFixed(2) + '/mes';
-    badge.style.display = 'inline-block';
-}
-
-function ocultarBadges() {
-    [3, 6, 12].forEach(meses => {
-        document.getElementById('badge_' + meses).style.display = 'none';
-    });
-}
-
-function limpiarCampos() {
-    const llaves = ['contado', 'cuotas2', 'cuotas3', 'cuotas6', 'cuotas10', 'cuotas12', 'cuotas15', 'cuotas18', 'cuotas24'];
-    llaves.forEach(llave => {
-        document.getElementById('cob_' + llave).innerText = 'Q0.00';
-        document.getElementById('com_' + llave).innerText = 'Q0.00';
-    });
-}
-
-function limpiarFormulario() {
-    document.getElementById('deposito').value = '';
-    ocultarBadges();
-    limpiarCampos();
-}
+    // Ejecución inicial para pintar la tabla vacía al cargar la página
+    calcularMontos();
 </script>
 
 </body>
