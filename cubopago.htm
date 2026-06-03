@@ -19,9 +19,30 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
         h2 {
             color: #0056b3;
-            text-align: center;
+            margin: 0;
+        }
+        .btn-cobros {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .btn-cobros:hover {
+            background-color: #004085;
         }
         .form-group {
             margin-bottom: 20px;
@@ -86,7 +107,10 @@
 <body>
 
 <div class="container">
-    <h2>Calculadora de Depósitos - CUBO PAGO</h2>
+    <div class="header-container">
+        <h2>Calculadora de Depósitos - CUBO PAGO</h2>
+        <a href="cubocalc.htm" class="btn-cobros">Cobros</a>
+    </div>
     
     <div class="form-group">
         <label for="monto">Monto cobrado en Quetzales (Q):</label>
