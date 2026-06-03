@@ -129,7 +129,7 @@
 
 <div class="container">
     <div class="header-container">
-        <h2>Calculadora de Monto a Cobrar - CUBO PAGO</h2>
+        <h2>Calculadora de Monto a Cobrar</h2>
         <a href="cubopago.htm" class="btn-depositos">Depósitos</a>
     </div>
     
@@ -158,15 +158,15 @@
 
 <script>
     const tasasCobro = [
-        { tipo: 'De contado', porcentaje: 4.99 },
-        { tipo: 'En 2 cuotas', porcentaje: 7.40 },
-        { tipo: 'En 3 cuotas', porcentaje: 7.90 },
-        { tipo: 'En 6 cuotas', porcentaje: 9.40 },
-        { tipo: 'En 10 cuotas', porcentaje: 9.70 },
-        { tipo: 'En 12 cuotas', porcentaje: 10.50 },
-        { tipo: 'En 15 cuotas', porcentaje: 12.50 },
-        { tipo: 'En 18 cuotas', porcentaje: 14.50 },
-        { tipo: 'En 24 cuotas', porcentaje: 15.61 }
+        { tipo: 'De contado', porcentaje: 4.99, cuotas: 1 },
+        { tipo: 'En 2 cuotas', porcentaje: 7.40, cuotas: 2 },
+        { tipo: 'En 3 cuotas', porcentaje: 7.90, cuotas: 3 },
+        { tipo: 'En 6 cuotas', porcentaje: 9.40, cuotas: 6 },
+        { tipo: 'En 10 cuotas', porcentaje: 9.70, cuotas: 10 },
+        { tipo: 'En 12 cuotas', porcentaje: 10.50, cuotas: 12 },
+        { tipo: 'En 15 cuotas', porcentaje: 12.50, cuotas: 15 },
+        { tipo: 'En 18 cuotas', porcentaje: 14.50, cuotas: 18 },
+        { tipo: 'En 24 cuotas', porcentaje: 15.61, cuotas: 24 }
     ];
 
     function formatearQuetzales(valor) {
@@ -193,19 +193,30 @@
             return;
         }
 
-        tasasCobro.forEach(item => {
+        tasasCobro.forEach((item, index) => {
             const comisionBase = item.porcentaje / 100;
             const ivaDeComision = comisionBase * 0.12;
             const factorDeduccionTotal = comisionBase + ivaDeComision;
 
-            const montoACobrar = deposito / (1 - factorDeduccionTotal);
-            const totalComisionRetenida = montoACobrar - deposito;
+            const montoACobrarTotal = deposito / (1 - factorDeduccionTotal);
+            const totalComisionRetenida = montoACobrarTotal - deposito;
+
+            let textoColumnaCobrar = '';
+            
+            if (index === 0) {
+                // Fila de contado muestra valor total completo
+                textoColumnaCobrar = formatearQuetzales(montoACobrarTotal);
+            } else {
+                // Filas en cuotas muestran únicamente el monto mensual limpio
+                const valorMensualidad = montoACobrarTotal / item.cuotas;
+                textoColumnaCobrar = formatearQuetzales(valorMensualidad);
+            }
 
             const fila = `<tr>
                 <td>${item.tipo}</td>
                 <td>${item.porcentaje.toFixed(2)}% + 12% IVA</td>
                 <td class="text-right monto-comision">${formatearQuetzales(totalComisionRetenida)}</td>
-                <td class="text-right monto-final">${formatearQuetzales(montoACobrar)}</td>
+                <td class="text-right monto-final">${textoColumnaCobrar}</td>
             </tr>`;
             tbody.innerHTML += fila;
         });
