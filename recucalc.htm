@@ -24,7 +24,6 @@
             display: block;
             margin-bottom: 8px;
         }
-        /* Contenedor para alinear el input y el botón de limpiar */
         .input-group {
             display: flex;
             gap: 10px;
@@ -38,7 +37,6 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        /* Estilos del botón de limpiar */
         .btn-limpiar {
             padding: 10px 15px;
             font-size: 14px;
@@ -90,7 +88,6 @@
     <h2>Calculadora Recurrente POS</h2>
     
     <label for="montoEsperado">Monto de depósito esperado (Q):</label>
-    <!-- Se agruparon el input y el botón en un contenedor flex -->
     <div class="input-group">
         <input type="number" id="montoEsperado" placeholder="Ej. 1000" min="0" step="0.01" oninput="calcularMontos()">
         <button class="btn-limpiar" onclick="limpiarCampo()">Limpiar</button>
@@ -150,35 +147,38 @@ function calcularMontos() {
         cuotas12: 0.10
     };
 
+    // Calcular montos totales de la columna "Cobrar"
     const totalContado = montoDeseado / (1 - comisiones.contado);
     const total3Cuotas = montoDeseado / (1 - comisiones.cuotas3);
     const total6Cuotas = montoDeseado / (1 - comisiones.cuotas6);
     const total12Cuotas = montoDeseado / (1 - comisiones.cuotas12);
 
-    const contadoEspecial = montoDeseado * 0.03;
+    // NUEVO: Calcular aplicando solo el 3% de comisión inversa para la celda roja de "Pago"
+    const contadoConComision3 = montoDeseado / (1 - 0.03);
 
+    // Calcular el valor de las cuotas mensuales para el resto de plazos
     const valorCuota3 = total3Cuotas / 3;
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
+    // Mostrar los montos en la columna "Cobrar"
     document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + total3Cuotas.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
 
-    document.getElementById('cuotaContado').innerText = "Q " + contadoEspecial.toFixed(2);
+    // Mostrar los montos en la columna "Pago"
+    document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2);
     document.getElementById('cuota3').innerText = "3 cuotas de Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "6 cuotas de Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "12 cuotas de Q " + valorCuota12.toFixed(2);
 }
 
-// Nueva función para borrar el campo de texto y restablecer los valores de la tabla
 function limpiarCampo() {
     document.getElementById('montoEsperado').value = "";
     resetearTabla();
 }
 
-// Función auxiliar para evitar duplicar el código de reseteo
 function resetearTabla() {
     document.getElementById('contado').innerText = "Q 0.00";
     document.getElementById('cuotas3').innerText = "Q 0.00";
