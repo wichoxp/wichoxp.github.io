@@ -99,7 +99,8 @@
                 <th>Plazo</th>
                 <th>Comisión</th>
                 <th>Cobrar</th>
-                <th>Pago</th>
+                <!-- NUEVO: Nombre de columna cambiado a "Mensual" -->
+                <th>Mensual</th>
             </tr>
         </thead>
         <tbody>
@@ -163,11 +164,11 @@ function calcularMontos() {
     document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
 
-    // NUEVO: Se concatena la frase " (3%)" al final del resultado numérico
+    // NUEVO: Se eliminaron los textos iniciales ("X cuotas de") en las filas de las cuotas
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
-    document.getElementById('cuota3').innerText = "3 cuotas de Q " + valorCuota3.toFixed(2);
-    document.getElementById('cuota6').innerText = "6 cuotas de Q " + valorCuota6.toFixed(2);
-    document.getElementById('cuota12').innerText = "12 cuotas de Q " + valorCuota12.toFixed(2);
+    document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
+    document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
+    document.getElementById('cuota12').innerText = "Q " + valorCuota12.toFixed(2);
 }
 
 function limpiarCampo() {
@@ -181,7 +182,6 @@ function resetearTabla() {
     document.getElementById('cuotas6').innerText = "Q 0.00";
     document.getElementById('cuotas12').innerText = "Q 0.00";
     
-    // Se asegura que el estado base también tenga el indicador (3%)
     document.getElementById('cuotaContado').innerText = "Q 0.00 (3%)";
     document.getElementById('cuota3').innerText = "Q 0.00";
     document.getElementById('cuota6').innerText = "Q 0.00";
