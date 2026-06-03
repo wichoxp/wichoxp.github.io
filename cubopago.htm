@@ -100,8 +100,7 @@
         <thead>
             <tr>
                 <th>Plazo / Cuotas</th>
-                <th>Comisión Base</th>
-                <th>IVA de Comisión</th>
+                <th>Comisión (+IVA)</th>
                 <th>Total Descuento</th>
                 <th class="text-right">Depósito Esperado</th>
             </tr>
@@ -141,8 +140,7 @@
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${plan.nombre} (${plan.tasa}%)</td>
-                <td>Q ${comisionBase.toFixed(2)}</td>
-                <td>Q ${ivaComision.toFixed(2)}</td>
+                <td>Q${comisionBase.toFixed(2)} (+Q${ivaComision.toFixed(2)})</td>
                 <td>Q ${totalDescuento.toFixed(2)}</td>
                 <td class="text-right deposito-verde">Q ${depositoEsperado.toFixed(2)}</td>
             `;
