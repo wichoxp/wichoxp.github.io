@@ -107,7 +107,7 @@
                 <td>Al contado</td>
                 <td>4.5%</td>
                 <td id="contado" class="monto-cobrar">Q 0.00</td>
-                <td id="cuotaContado" class="texto-rojo">Q 0.00</td>
+                <td id="cuotaContado" class="texto-rojo">Q 0.00 (3%)</td>
             </tr>
             <tr>
                 <td>3 cuotas</td>
@@ -147,28 +147,24 @@ function calcularMontos() {
         cuotas12: 0.10
     };
 
-    // Calcular montos totales de la columna "Cobrar"
     const totalContado = montoDeseado / (1 - comisiones.contado);
     const total3Cuotas = montoDeseado / (1 - comisiones.cuotas3);
     const total6Cuotas = montoDeseado / (1 - comisiones.cuotas6);
     const total12Cuotas = montoDeseado / (1 - comisiones.cuotas12);
 
-    // NUEVO: Calcular aplicando solo el 3% de comisión inversa para la celda roja de "Pago"
     const contadoConComision3 = montoDeseado / (1 - 0.03);
 
-    // Calcular el valor de las cuotas mensuales para el resto de plazos
     const valorCuota3 = total3Cuotas / 3;
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
-    // Mostrar los montos en la columna "Cobrar"
     document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + total3Cuotas.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
 
-    // Mostrar los montos en la columna "Pago"
-    document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2);
+    // NUEVO: Se concatena la frase " (3%)" al final del resultado numérico
+    document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "3 cuotas de Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "6 cuotas de Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "12 cuotas de Q " + valorCuota12.toFixed(2);
@@ -185,7 +181,8 @@ function resetearTabla() {
     document.getElementById('cuotas6').innerText = "Q 0.00";
     document.getElementById('cuotas12').innerText = "Q 0.00";
     
-    document.getElementById('cuotaContado').innerText = "Q 0.00";
+    // Se asegura que el estado base también tenga el indicador (3%)
+    document.getElementById('cuotaContado').innerText = "Q 0.00 (3%)";
     document.getElementById('cuota3').innerText = "Q 0.00";
     document.getElementById('cuota6').innerText = "Q 0.00";
     document.getElementById('cuota12').innerText = "Q 0.00";
