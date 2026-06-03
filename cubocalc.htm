@@ -21,15 +21,33 @@
             max-width: 750px;
             width: 100%;
         }
-        h2 {
-            color: #333333;
-            margin-top: 0;
-            text-align: center;
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 2px solid #007bff;
             padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333333;
+            margin: 0;
+        }
+        .btn-depositos {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .btn-depositos:hover {
+            background-color: #0056b3;
         }
         .form-group {
-            margin-top: 20px;
             margin-bottom: 25px;
         }
         label {
@@ -110,7 +128,10 @@
 <body>
 
 <div class="container">
-    <h2>Calculadora de Monto a Cobrar</h2>
+    <div class="header-container">
+        <h2>Calculadora de Monto a Cobrar - CUBO PAGO</h2>
+        <a href="cubopago.htm" class="btn-depositos">Depósitos</a>
+    </div>
     
     <div class="form-group">
         <label for="deposito">Monto del depósito esperado:</label>
@@ -125,8 +146,8 @@
             <tr>
                 <th>Tipo de Cobro</th>
                 <th>Comisión (Base)</th>
-                <th class="text-right">Total Comisión + IVA</th>
-                <th class="text-right">Monto a Cobrar</th>
+                <th class="text-right">Total</th>
+                <th class="text-right">Cobrar</th>
             </tr>
         </thead>
         <tbody id="tabla-resultados">
@@ -136,7 +157,6 @@
 </div>
 
 <script>
-    // Estructura de datos con las comisiones solicitadas
     const tasasCobro = [
         { tipo: 'De contado', porcentaje: 4.99 },
         { tipo: 'En 2 cuotas', porcentaje: 7.40 },
@@ -149,7 +169,6 @@
         { tipo: 'En 24 cuotas', porcentaje: 15.61 }
     ];
 
-    // Función auxiliar para formatear la moneda a Quetzales de Guatemala (es-GT)
     function formatearQuetzales(valor) {
         return 'Q ' + valor.toLocaleString('es-GT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
@@ -159,10 +178,8 @@
         const deposito = parseFloat(depositoInput);
         const tbody = document.getElementById('tabla-resultados');
         
-        // Limpiar la tabla previa
         tbody.innerHTML = '';
 
-        // Si el campo está vacío o no es válido, muestra la estructura base vacía
         if (isNaN(deposito) || deposito <= 0) {
             tasasCobro.forEach(item => {
                 const fila = `<tr>
@@ -176,16 +193,12 @@
             return;
         }
 
-        // Calcular los valores para cada escenario
         tasasCobro.forEach(item => {
             const comisionBase = item.porcentaje / 100;
             const ivaDeComision = comisionBase * 0.12;
             const factorDeduccionTotal = comisionBase + ivaDeComision;
 
-            // Calcular el valor total que se le debe cobrar al cliente
             const montoACobrar = deposito / (1 - factorDeduccionTotal);
-            
-            // El desglose de la comisión es la resta entre lo que se cobra y lo que se recibe
             const totalComisionRetenida = montoACobrar - deposito;
 
             const fila = `<tr>
@@ -198,15 +211,13 @@
         });
     }
 
-    // Nueva función para el botón de limpieza
     function limpiarCampo() {
         const input = document.getElementById('deposito');
-        input.value = ''; // Borra el valor numérico
-        calcularMontos(); // Resetea la tabla a su estado vacío
-        input.focus();    // Devuelve el foco del cursor al input para volver a escribir directamente
+        input.value = '';
+        calcularMontos();
+        input.focus();
     }
 
-    // Ejecución inicial para pintar la tabla vacía al cargar la página
     calcularMontos();
 </script>
 
