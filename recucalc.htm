@@ -27,7 +27,7 @@
         .input-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         input[type="number"] {
             flex: 1;
@@ -51,14 +51,15 @@
         .btn-limpiar:hover {
             background-color: #5a6268;
         }
-        /* Contenedor de la casilla de verificación */
+        /* NUEVO: Contenedor de la casilla de verificación modificado con color gris y margen superior */
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-top: 20px; /* Margen superior para separarlo de la tabla */
             font-weight: bold;
             cursor: pointer;
+            color: #6c757d;  /* Color gris para el texto */
         }
         .checkbox-group input {
             cursor: pointer;
@@ -95,7 +96,6 @@
             font-weight: bold;
             color: #dc3545;
         }
-        /* Clase para ocultar la columna de manera predeterminada */
         .columna-total {
             display: none;
         }
@@ -112,20 +112,13 @@
         <button class="btn-limpiar" onclick="limpiarCampo()">Limpiar</button>
     </div>
 
-    <!-- NUEVO: Casilla para activar/desactivar la columna Total -->
-    <label class="checkbox-group">
-        <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Total
-    </label>
-
     <table>
         <thead>
             <tr>
                 <th>Plazo</th>
                 <th>Comisión</th>
                 <th>Cargo/Mes</th>
-                <!-- NUEVO: Encabezado cambiado a Cuota/Mes -->
                 <th>Cuota/Mes</th>
-                <!-- NUEVO: Nueva columna Total (Oculta por defecto) -->
                 <th class="columna-total">Total</th>
             </tr>
         </thead>
@@ -160,6 +153,11 @@
             </tr>
         </tbody>
     </table>
+
+    <!-- NUEVO: Casilla reubicada debajo de la tabla -->
+    <label class="checkbox-group">
+        <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Total
+    </label>
 </div>
 
 <script>
@@ -194,13 +192,11 @@ function calcularMontos() {
     const comisionMensual6 = diff6Cuotas / 6;
     const comisionMensual12 = diff12Cuotas / 12;
 
-    // Valores para la columna 4 ("Cuota/Mes")
     const contadoConComision3 = montoDeseado / (1 - 0.03);
     const valorCuota3 = total3Cuotas / 3;
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
-    // NUEVO: Cálculos para la columna 5 ("Total") -> Multiplica Cuota/Mes por su número de cuotas
     const totalFilaContado = contadoConComision3 * 1;
     const totalFila3 = valorCuota3 * 3;
     const totalFila6 = valorCuota6 * 6;
@@ -213,20 +209,17 @@ function calcularMontos() {
     document.getElementById('cuotas6').innerText = "Q " + comisionMensual6.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + comisionMensual12.toFixed(2);
 
-    // Muestra en columna "Cuota/Mes"
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "Q " + valorCuota12.toFixed(2);
 
-    // NUEVO: Muestra en la nueva columna "Total" (Mantiene el formato solicitado para la fila de contado)
     document.getElementById('totalContado').innerText = "Q " + totalFilaContado.toFixed(2) + " (3%)";
     document.getElementById('total3').innerText = "Q " + totalFila3.toFixed(2);
     document.getElementById('total6').innerText = "Q " + totalFila6.toFixed(2);
     document.getElementById('total12').innerText = "Q " + totalFila12.toFixed(2);
 }
 
-// NUEVO: Función para ocultar o mostrar la columna dependiendo del estado del checkbox
 function alternarColumnaTotal() {
     const checked = document.getElementById('chkTotal').checked;
     const elementosColumna = document.querySelectorAll('.columna-total');
@@ -254,7 +247,6 @@ function resetearTabla() {
     document.getElementById('cuota6').innerText = "";
     document.getElementById('cuota12').innerText = "";
 
-    // NUEVO: Limpieza de la nueva columna
     document.getElementById('totalContado').innerText = "";
     document.getElementById('total3').innerText = "";
     document.getElementById('total6').innerText = "";
