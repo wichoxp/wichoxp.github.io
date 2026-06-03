@@ -98,9 +98,9 @@
             <tr>
                 <th>Plazo</th>
                 <th>Comisión</th>
+                <!-- NUEVO: Nombres de columnas actualizados aquí -->
+                <th>Total</th>
                 <th>Cobrar</th>
-                <!-- NUEVO: Nombre de columna cambiado a "Mensual" -->
-                <th>Mensual</th>
             </tr>
         </thead>
         <tbody>
@@ -159,12 +159,13 @@ function calcularMontos() {
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
+    // Columna "Total"
     document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + total3Cuotas.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
 
-    // NUEVO: Se eliminaron los textos iniciales ("X cuotas de") en las filas de las cuotas
+    // Columna "Cobrar"
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
