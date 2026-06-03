@@ -51,15 +51,14 @@
         .btn-limpiar:hover {
             background-color: #5a6268;
         }
-        /* NUEVO: Contenedor de la casilla de verificación modificado con color gris y margen superior */
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 20px; /* Margen superior para separarlo de la tabla */
+            margin-top: 20px;
             font-weight: bold;
             cursor: pointer;
-            color: #6c757d;  /* Color gris para el texto */
+            color: #6c757d;
         }
         .checkbox-group input {
             cursor: pointer;
@@ -119,12 +118,14 @@
                 <th>Comisión</th>
                 <th>Cargo/Mes</th>
                 <th>Cuota/Mes</th>
-                <th class="columna-total">Total</th>
+                <!-- NUEVO: Nombre de columna cambiado a "Cobro" -->
+                <th class="columna-total">Cobro</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Contado 4.5%</td>
+                <!-- NUEVO: Etiqueta cambiada a "Chaz 4.5%" -->
+                <td>Chaz 4.5%</td>
                 <td id="comisionContado"></td>
                 <td id="contado" class="monto-cobrar"></td>
                 <td id="cuotaContado" class="texto-rojo"></td>
@@ -154,9 +155,9 @@
         </tbody>
     </table>
 
-    <!-- NUEVO: Casilla reubicada debajo de la tabla -->
+    <!-- NUEVO: Etiqueta de la casilla cambiada a "Cobrar" -->
     <label class="checkbox-group">
-        <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Total
+        <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Cobrar
     </label>
 </div>
 
@@ -209,12 +210,14 @@ function calcularMontos() {
     document.getElementById('cuotas6').innerText = "Q " + comisionMensual6.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + comisionMensual12.toFixed(2);
 
+    // Muestra en columna "Cuota/Mes" (Mantiene el (3%) solicitado anteriormente)
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "Q " + valorCuota12.toFixed(2);
 
-    document.getElementById('totalContado').innerText = "Q " + totalFilaContado.toFixed(2) + " (3%)";
+    // NUEVO: Muestra en la columna "Cobro" quitando el "(3%)" de la primera fila
+    document.getElementById('totalContado').innerText = "Q " + totalFilaContado.toFixed(2);
     document.getElementById('total3').innerText = "Q " + totalFila3.toFixed(2);
     document.getElementById('total6').innerText = "Q " + totalFila6.toFixed(2);
     document.getElementById('total12').innerText = "Q " + totalFila12.toFixed(2);
