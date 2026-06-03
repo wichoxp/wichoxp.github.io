@@ -60,7 +60,7 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            height: 20px; /* Asegura que las celdas no colapsen visualmente al estar vacías */
+            height: 20px;
         }
         th {
             background-color: #007bff;
@@ -107,6 +107,7 @@
             <tr>
                 <td>Contado 4.5%</td>
                 <td id="comisionContado"></td>
+                <!-- Celda modificada -->
                 <td id="contado" class="monto-cobrar"></td>
                 <td id="cuotaContado" class="texto-rojo"></td>
             </tr>
@@ -136,7 +137,6 @@
 function calcularMontos() {
     const montoDeseado = parseFloat(document.getElementById('montoEsperado').value);
 
-    // NUEVO: Si no hay un número válido o es menor o igual a 0, deja las celdas vacías
     if (isNaN(montoDeseado) || montoDeseado <= 0) {
         resetearTabla();
         return;
@@ -159,6 +159,9 @@ function calcularMontos() {
     const diff6Cuotas = total6Cuotas - montoDeseado;
     const diff12Cuotas = total12Cuotas - montoDeseado;
 
+    // NUEVO: Suma solicitada (Monto esperado + Comisión al contado) para la Fila 1, Columna 3
+    const sumaMontoMasComisionContado = montoDeseado + diffContado;
+
     const comisionMensual3 = diff3Cuotas / 3;
     const comisionMensual6 = diff6Cuotas / 6;
     const comisionMensual12 = diff12Cuotas / 12;
@@ -170,7 +173,8 @@ function calcularMontos() {
 
     document.getElementById('comisionContado').innerText = "Q " + diffContado.toFixed(2);
 
-    document.getElementById('contado').innerText = "Q " + diffContado.toFixed(2);
+    // NUEVO: Se inyecta el resultado de la suma en la fila 1 de la columna "Cargo/Mes"
+    document.getElementById('contado').innerText = "Q " + sumaMontoMasComisionContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + comisionMensual3.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + comisionMensual6.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + comisionMensual12.toFixed(2);
@@ -186,7 +190,6 @@ function limpiarCampo() {
     resetearTabla();
 }
 
-// NUEVO: Modificada la función para borrar por completo el contenido de las celdas
 function resetearTabla() {
     document.getElementById('comisionContado').innerText = "";
 
