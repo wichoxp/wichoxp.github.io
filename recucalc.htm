@@ -98,7 +98,6 @@
             <tr>
                 <th>Plazo</th>
                 <th>Comisión</th>
-                <!-- NUEVO: Nombres de columnas actualizados aquí -->
                 <th>Total</th>
                 <th>Cobrar</th>
             </tr>
@@ -148,24 +147,31 @@ function calcularMontos() {
         cuotas12: 0.10
     };
 
+    // 1. Calcular los cobros totales base
     const totalContado = montoDeseado / (1 - comisiones.contado);
     const total3Cuotas = montoDeseado / (1 - comisiones.cuotas3);
     const total6Cuotas = montoDeseado / (1 - comisiones.cuotas6);
     const total12Cuotas = montoDeseado / (1 - comisiones.cuotas12);
 
-    const contadoConComision3 = montoDeseado / (1 - 0.03);
+    // NUEVO: Calcular la diferencia (Cobro total menos monto ingresado) para las filas de cuotas
+    const diff3Cuotas = total3Cuotas - montoDeseado;
+    const diff6Cuotas = total6Cuotas - montoDeseado;
+    const diff12Cuotas = total12Cuotas - montoDeseado;
 
+    // Calcular la columna "Cobrar"
+    const contadoConComision3 = montoDeseado / (1 - 0.03);
     const valorCuota3 = total3Cuotas / 3;
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
-    // Columna "Total"
+    // Mostrar en Columna "Total" 
+    // La primera fila se mantiene igual; las filas 2, 3 y 4 muestran la diferencia calculada
     document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
-    document.getElementById('cuotas3').innerText = "Q " + total3Cuotas.toFixed(2);
-    document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
-    document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
+    document.getElementById('cuotas3').innerText = "Q " + diff3Cuotas.toFixed(2);
+    document.getElementById('cuotas6').innerText = "Q " + diff6Cuotas.toFixed(2);
+    document.getElementById('cuotas12').innerText = "Q " + diff12Cuotas.toFixed(2);
 
-    // Columna "Cobrar"
+    // Mostrar en Columna "Cobrar"
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
