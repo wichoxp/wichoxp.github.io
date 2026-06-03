@@ -104,8 +104,10 @@
         </thead>
         <tbody>
             <tr>
-                <td>Al contado</td>
-                <td>4.5%</td>
+                <!-- NUEVO: Nombre de etiqueta cambiado -->
+                <td>Contado 4.5%</td>
+                <!-- NUEVO: Se le asignó un ID para calcular la comisión en Quetzales -->
+                <td id="comisionContado">Q 0.00</td>
                 <td id="contado" class="monto-cobrar">Q 0.00</td>
                 <td id="cuotaContado" class="texto-rojo">Q 0.00 (3%)</td>
             </tr>
@@ -153,7 +155,10 @@ function calcularMontos() {
     const total6Cuotas = montoDeseado / (1 - comisiones.cuotas6);
     const total12Cuotas = montoDeseado / (1 - comisiones.cuotas12);
 
-    // NUEVO: Calcular la diferencia (Cobro total menos monto ingresado) para las filas de cuotas
+    // NUEVO: Calcular la diferencia (Comisión en Q) para la fila de Contado
+    const diffContado = totalContado - montoDeseado;
+
+    // Calcular la diferencia para las filas de cuotas
     const diff3Cuotas = total3Cuotas - montoDeseado;
     const diff6Cuotas = total6Cuotas - montoDeseado;
     const diff12Cuotas = total12Cuotas - montoDeseado;
@@ -164,8 +169,10 @@ function calcularMontos() {
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
-    // Mostrar en Columna "Total" 
-    // La primera fila se mantiene igual; las filas 2, 3 y 4 muestran la diferencia calculada
+    // NUEVO: Mostrar la comisión en Quetzales para la fila 1, columna 2
+    document.getElementById('comisionContado').innerText = "Q " + diffContado.toFixed(2);
+
+    // Mostrar en Columna "Total"
     document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + diff3Cuotas.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + diff6Cuotas.toFixed(2);
@@ -184,6 +191,9 @@ function limpiarCampo() {
 }
 
 function resetearTabla() {
+    // NUEVO: Resetear la celda de comisión contado
+    document.getElementById('comisionContado').innerText = "Q 0.00";
+
     document.getElementById('contado').innerText = "Q 0.00";
     document.getElementById('cuotas3').innerText = "Q 0.00";
     document.getElementById('cuotas6').innerText = "Q 0.00";
