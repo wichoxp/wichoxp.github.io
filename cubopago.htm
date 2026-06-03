@@ -98,6 +98,10 @@
         .text-right {
             text-align: right;
         }
+        .total-rojo {
+            color: #dc3545;
+            font-weight: bold;
+        }
         .deposito-verde {
             color: #28a745;
             font-weight: bold;
@@ -165,7 +169,7 @@
             fila.innerHTML = `
                 <td>${plan.nombre} (${plan.tasa}%)</td>
                 <td>Q${comisionBase.toFixed(2)} (+Q${ivaComision.toFixed(2)})</td>
-                <td>Q ${totalDescuento.toFixed(2)}</td>
+                <td class="total-rojo">Q ${totalDescuento.toFixed(2)}</td>
                 <td class="text-right deposito-verde">Q ${depositoEsperado.toFixed(2)}</td>
             `;
             tbody.appendChild(fila);
