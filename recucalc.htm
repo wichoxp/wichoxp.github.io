@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Recurrente POS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .monto-cobrar {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .monto-cuota {
+            font-weight: bold;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora Recurrente POS</h2>
+    
+    <label for="montoEsperado">Monto de depósito esperado (Q):</label>
+    <input type="number" id="montoEsperado" placeholder="Ej. 1000" min="0" step="0.01" oninput="calcularMontos()">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Plazo</th>
+                <th>Comisión</th>
+                <th>Monto Total a Cobrar</th>
+                <th>Pago Mensual</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Al contado</td>
+                <td>4.5%</td>
+                <td id="contado" class="monto-cobrar">Q 0.00</td>
+                <td id="cuotaContado" class="monto-cuota">-</td>
+            </tr>
+            <tr>
+                <td>3 cuotas</td>
+                <td>8.0%</td>
+                <td id="cuotas3" class="monto-cobrar">Q 0.00</td>
+                <td id="cuota3" class="monto-cuota">Q 0.00</td>
+            </tr>
+            <tr>
+                <td>6 cuotas</td>
+                <td>9.0%</td>
+                <td id="cuotas6" class="monto-cobrar">Q 0.00</td>
+                <td id="cuota6" class="monto-cuota">Q 0.00</td>
+            </tr>
+            <tr>
+                <td>12 cuotas</td>
+                <td>10.0%</td>
+                <td id="cuotas12" class="monto-cobrar">Q 0.00</td>
+                <td id="cuota12" class="monto-cuota">Q 0.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function calcularMontos() {
+    const montoDeseado = parseFloat(document.getElementById('montoEsperado').value);
+
+    if (isNaN(montoDeseado) || montoDeseado <= 0) {
+        document.getElementById('contado').innerText = "Q 0.00";
+        document.getElementById('cuotas3').innerText = "Q 0.00";
+        document.getElementById('cuotas6').innerText = "Q 0.00";
+        document.getElementById('cuotas12').innerText = "Q 0.00";
+        
+        document.getElementById('cuotaContado').innerText = "-";
+        document.getElementById('cuota3').innerText = "Q 0.00";
+        document.getElementById('cuota6').innerText = "Q 0.00";
+        document.getElementById('cuota12').innerText = "Q 0.00";
+        return;
+    }
+
+    const comisiones = {
+        contado: 0.045,
+        cuotas3: 0.08,
+        cuotas6: 0.09,
+        cuotas12: 0.10
+    };
+
+    // Calcular montos totales a cobrar
+    const totalContado = montoDeseado / (1 - comisiones.contado);
+    const total3Cuotas = montoDeseado / (1 - comisiones.cuotas3);
+    const total6Cuotas = montoDeseado / (1 - comisiones.cuotas6);
+    const total12Cuotas = montoDeseado / (1 - comisiones.cuotas12);
+
+    // Calcular el valor de cada cuota individual
+    const valorCuota3 = total3Cuotas / 3;
+    const valorCuota6 = total6Cuotas / 6;
+    const valorCuota12 = total12Cuotas / 12;
+
+    // Mostrar los montos totales
+    document.getElementById('contado').innerText = "Q " + totalContado.toFixed(2);
+    document.getElementById('cuotas3').innerText = "Q " + total3Cuotas.toFixed(2);
+    document.getElementById('cuotas6').innerText = "Q " + total6Cuotas.toFixed(2);
+    document.getElementById('cuotas12').innerText = "Q " + total12Cuotas.toFixed(2);
+
+    // Mostrar el desglose de cuotas mensuales
+    document.getElementById('cuotaContado').innerText = "Q " + totalContado.toFixed(2);
+    document.getElementById('cuota3').innerText = "3 cuotas de Q " + valorCuota3.toFixed(2);
+    document.getElementById('cuota6').innerText = "6 cuotas de Q " + valorCuota6.toFixed(2);
+    document.getElementById('cuota12').innerText = "12 cuotas de Q " + valorCuota12.toFixed(2);
+}
+</script>
+
+</body>
+</html>
