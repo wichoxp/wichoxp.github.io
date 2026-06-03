@@ -100,14 +100,16 @@
         }
     </style>
 </head>
-<body>
+<!-- NUEVO: El evento onload asegura el enfoque del cursor al cargar la página -->
+<body onload="enfocarInput()">
 
 <div class="container">
     <h2>Calculadora Recurrente POS</h2>
     
     <label for="montoEsperado">Monto de depósito esperado (Q):</label>
     <div class="input-group">
-        <input type="number" id="montoEsperado" placeholder="Ej. 1000" min="0" step="0.01" oninput="calcularMontos()">
+        <!-- NUEVO: Se añadió el atributo HTML 'autofocus' como doble respaldo -->
+        <input type="number" id="montoEsperado" placeholder="Ej. 1000" min="0" step="0.01" oninput="calcularMontos()" autofocus>
         <button class="btn-limpiar" onclick="limpiarCampo()">Limpiar</button>
     </div>
 
@@ -118,13 +120,11 @@
                 <th>Comisión</th>
                 <th>Cargo/Mes</th>
                 <th>Cuota/Mes</th>
-                <!-- NUEVO: Nombre de columna cambiado a "Cobro" -->
                 <th class="columna-total">Cobro</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <!-- NUEVO: Etiqueta cambiada a "Chaz 4.5%" -->
                 <td>Chaz 4.5%</td>
                 <td id="comisionContado"></td>
                 <td id="contado" class="monto-cobrar"></td>
@@ -155,13 +155,17 @@
         </tbody>
     </table>
 
-    <!-- NUEVO: Etiqueta de la casilla cambiada a "Cobrar" -->
     <label class="checkbox-group">
         <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Cobrar
     </label>
 </div>
 
 <script>
+// NUEVO: Función para colocar automáticamente el cursor en el campo de texto
+function enfocarInput() {
+    document.getElementById('montoEsperado').focus();
+}
+
 function calcularMontos() {
     const montoDeseado = parseFloat(document.getElementById('montoEsperado').value);
 
@@ -210,13 +214,11 @@ function calcularMontos() {
     document.getElementById('cuotas6').innerText = "Q " + comisionMensual6.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + comisionMensual12.toFixed(2);
 
-    // Muestra en columna "Cuota/Mes" (Mantiene el (3%) solicitado anteriormente)
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "Q " + valorCuota12.toFixed(2);
 
-    // NUEVO: Muestra en la columna "Cobro" quitando el "(3%)" de la primera fila
     document.getElementById('totalContado').innerText = "Q " + totalFilaContado.toFixed(2);
     document.getElementById('total3').innerText = "Q " + totalFila3.toFixed(2);
     document.getElementById('total6').innerText = "Q " + totalFila6.toFixed(2);
@@ -235,6 +237,8 @@ function alternarColumnaTotal() {
 function limpiarCampo() {
     document.getElementById('montoEsperado').value = "";
     resetearTabla();
+    // NUEVO: Devuelve el cursor al campo de texto también después de presionar el botón Limpiar
+    enfocarInput();
 }
 
 function resetearTabla() {
