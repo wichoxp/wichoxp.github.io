@@ -12,7 +12,7 @@
             color: #333;
         }
         .container {
-            max-width: 600px;
+            max-width: 650px;
             background: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -27,7 +27,7 @@
         .input-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         input[type="number"] {
             flex: 1;
@@ -50,6 +50,20 @@
         }
         .btn-limpiar:hover {
             background-color: #5a6268;
+        }
+        /* Contenedor de la casilla de verificación */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .checkbox-group input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
         }
         table {
             width: 100%;
@@ -81,6 +95,10 @@
             font-weight: bold;
             color: #dc3545;
         }
+        /* Clase para ocultar la columna de manera predeterminada */
+        .columna-total {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -94,40 +112,51 @@
         <button class="btn-limpiar" onclick="limpiarCampo()">Limpiar</button>
     </div>
 
+    <!-- NUEVO: Casilla para activar/desactivar la columna Total -->
+    <label class="checkbox-group">
+        <input type="checkbox" id="chkTotal" onchange="alternarColumnaTotal()"> Total
+    </label>
+
     <table>
         <thead>
             <tr>
                 <th>Plazo</th>
                 <th>Comisión</th>
                 <th>Cargo/Mes</th>
-                <th>Cobrar</th>
+                <!-- NUEVO: Encabezado cambiado a Cuota/Mes -->
+                <th>Cuota/Mes</th>
+                <!-- NUEVO: Nueva columna Total (Oculta por defecto) -->
+                <th class="columna-total">Total</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>Contado 4.5%</td>
                 <td id="comisionContado"></td>
-                <!-- Celda modificada -->
                 <td id="contado" class="monto-cobrar"></td>
                 <td id="cuotaContado" class="texto-rojo"></td>
+                <td id="totalContado" class="texto-rojo columna-total"></td>
             </tr>
             <tr>
                 <td>3 cuotas</td>
                 <td>8.0%</td>
                 <td id="cuotas3" class="monto-cobrar"></td>
                 <td id="cuota3" class="monto-cuota"></td>
+                <td id="total3" class="monto-cuota columna-total"></td>
             </tr>
             <tr>
                 <td>6 cuotas</td>
                 <td>9.0%</td>
                 <td id="cuotas6" class="monto-cobrar"></td>
                 <td id="cuota6" class="monto-cuota"></td>
+                <td id="total6" class="monto-cuota columna-total"></td>
             </tr>
             <tr>
                 <td>12 cuotas</td>
                 <td>10.0%</td>
                 <td id="cuotas12" class="monto-cobrar"></td>
                 <td id="cuota12" class="monto-cuota"></td>
+                <td id="total12" class="monto-cuota columna-total"></td>
             </tr>
         </tbody>
     </table>
@@ -159,30 +188,52 @@ function calcularMontos() {
     const diff6Cuotas = total6Cuotas - montoDeseado;
     const diff12Cuotas = total12Cuotas - montoDeseado;
 
-    // NUEVO: Suma solicitada (Monto esperado + Comisión al contado) para la Fila 1, Columna 3
     const sumaMontoMasComisionContado = montoDeseado + diffContado;
 
     const comisionMensual3 = diff3Cuotas / 3;
     const comisionMensual6 = diff6Cuotas / 6;
     const comisionMensual12 = diff12Cuotas / 12;
 
+    // Valores para la columna 4 ("Cuota/Mes")
     const contadoConComision3 = montoDeseado / (1 - 0.03);
     const valorCuota3 = total3Cuotas / 3;
     const valorCuota6 = total6Cuotas / 6;
     const valorCuota12 = total12Cuotas / 12;
 
+    // NUEVO: Cálculos para la columna 5 ("Total") -> Multiplica Cuota/Mes por su número de cuotas
+    const totalFilaContado = contadoConComision3 * 1;
+    const totalFila3 = valorCuota3 * 3;
+    const totalFila6 = valorCuota6 * 6;
+    const totalFila12 = valorCuota12 * 12;
+
     document.getElementById('comisionContado').innerText = "Q " + diffContado.toFixed(2);
 
-    // NUEVO: Se inyecta el resultado de la suma en la fila 1 de la columna "Cargo/Mes"
     document.getElementById('contado').innerText = "Q " + sumaMontoMasComisionContado.toFixed(2);
     document.getElementById('cuotas3').innerText = "Q " + comisionMensual3.toFixed(2);
     document.getElementById('cuotas6').innerText = "Q " + comisionMensual6.toFixed(2);
     document.getElementById('cuotas12').innerText = "Q " + comisionMensual12.toFixed(2);
 
+    // Muestra en columna "Cuota/Mes"
     document.getElementById('cuotaContado').innerText = "Q " + contadoConComision3.toFixed(2) + " (3%)";
     document.getElementById('cuota3').innerText = "Q " + valorCuota3.toFixed(2);
     document.getElementById('cuota6').innerText = "Q " + valorCuota6.toFixed(2);
     document.getElementById('cuota12').innerText = "Q " + valorCuota12.toFixed(2);
+
+    // NUEVO: Muestra en la nueva columna "Total" (Mantiene el formato solicitado para la fila de contado)
+    document.getElementById('totalContado').innerText = "Q " + totalFilaContado.toFixed(2) + " (3%)";
+    document.getElementById('total3').innerText = "Q " + totalFila3.toFixed(2);
+    document.getElementById('total6').innerText = "Q " + totalFila6.toFixed(2);
+    document.getElementById('total12').innerText = "Q " + totalFila12.toFixed(2);
+}
+
+// NUEVO: Función para ocultar o mostrar la columna dependiendo del estado del checkbox
+function alternarColumnaTotal() {
+    const checked = document.getElementById('chkTotal').checked;
+    const elementosColumna = document.querySelectorAll('.columna-total');
+    
+    elementosColumna.forEach(el => {
+        el.style.display = checked ? 'table-cell' : 'none';
+    });
 }
 
 function limpiarCampo() {
@@ -202,6 +253,12 @@ function resetearTabla() {
     document.getElementById('cuota3').innerText = "";
     document.getElementById('cuota6').innerText = "";
     document.getElementById('cuota12').innerText = "";
+
+    // NUEVO: Limpieza de la nueva columna
+    document.getElementById('totalContado').innerText = "";
+    document.getElementById('total3').innerText = "";
+    document.getElementById('total6').innerText = "";
+    document.getElementById('total12').innerText = "";
 }
 </script>
 
