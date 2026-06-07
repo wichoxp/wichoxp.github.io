@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora POS Guatemala</title>
-    <!-- Línea añadida para cargar el favicon desde el mismo directorio -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     
     <style>
@@ -12,14 +11,19 @@
         .card { background: white; max-width: 450px; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #1e293b; margin-top: 0; }
         label { display: block; margin: 15px 0 5px; font-weight: bold; }
-        input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .checkbox-container { display: flex; align-items: center; margin: 20px 0; background: #e2e8f0; padding: 12px; border-radius: 6px; cursor: pointer; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fff; }
+        .checkbox-container { display: flex; align-items: center; margin: 20px 0; padding: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .checkbox-active { background: #e2e8f0; }
+        .checkbox-disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
         .checkbox-container input { margin-right: 10px; transform: scale(1.2); cursor: pointer; }
-        .checkbox-container span { font-size: 14px; font-weight: bold; color: #334155; }
+        .checkbox-container input:disabled { cursor: not-allowed; }
+        .checkbox-container span { font-size: 14px; font-weight: bold; }
         .result-box { margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8fafc; border-left: 5px solid #cbd5e1; transition: all 0.2s ease; }
         .recommended { border-left-color: #10b981; background: #f0fdf4; }
         .monto { font-size: 20px; font-weight: bold; color: #1e293b; }
-        .ahorro { display: block; font-size: 12px; color: #059669; margin-top: 4px; font-weight: bold; }
+        .cuota-mensual { display: block; font-size: 14px; color: #475569; margin-top: 2px; }
+        .ahorro { display: block; font-size: 12px; color: #059669; margin-top: 6px; font-weight: bold; }
+        .not-available { color: #94a3b8; font-style: italic; }
     </style>
 </head>
 <body>
@@ -30,68 +34,169 @@
     <label for="neto">¿Cuánto dinero deseas recibir neto? (Q):</label>
     <input type="number" id="neto" placeholder="Ej. 150.00" step="0.01" min="0.01" autofocus oninput="calcularMontos()">
     
-    <label class="checkbox-container">
+    <label for="tipoPago">Modalidad de pago:</label>
+    <select id="tipoPago" onchange="actualizarInterfaz()">
+        <option value="contado">Al Contado</option>
+        <option value="2">2 Cuotas</option>
+        <option value="3">3 Cuotas</option>
+        <option value="6">6 Cuotas</option>
+        <option value="10">10 Cuotas</option>
+        <option value="12">12 Cuotas</option>
+        <option value="15">15 Cuotas</option>
+        <option value="18">18 Cuotas</option>
+        <option value="24">24 Cuotas</option>
+        <option value="36">36 Cuotas</option>
+        <option value="48">48 Cuotas</option>
+    </select>
+
+    <label id="lblAbsorber" class="checkbox-container checkbox-active">
         <input type="checkbox" id="absorberComision" checked onchange="calcularMontos()">
-        <span>Absorber comisión (Bajar a CUBO 3.5% / RECURRENTE 3%)</span>
+        <span id="txtAbsorber">Absorber comisión (Bajar a CUBO 3.5% / RECURRENTE 3%)</span>
     </label>
 
     <div id="resultadoCubo" class="result-box">
         <strong>CUBO POS:</strong><br>
-        Monto a cobrar en el link: <span id="txtCubo" class="monto">Q0.00</span>
+        <div id="montoCuboContenedor">
+            Monto a cobrar en el link: <span id="txtCubo" class="monto">Q0.00</span>
+            <span id="mensualCubo" class="cuota-mensual"></span>
+        </div>
         <span id="ahorroCubo" class="ahorro" style="display:none;">¡Opción más económica!</span>
     </div>
 
     <div id="resultadoRecurrente" class="result-box">
         <strong>RECURRENTE POS:</strong><br>
-        Monto a cobrar en el link: <span id="txtRecurrente" class="monto">Q0.00</span>
+        <div id="montoRecurrenteContenedor">
+            Monto a cobrar en el link: <span id="txtRecurrente" class="monto">Q0.00</span>
+            <span id="mensualRecurrente" class="cuota-mensual"></span>
+        </div>
         <span id="ahorroRecurrente" class="ahorro" style="display:none;">¡Opción más económica!</span>
     </div>
 </div>
 
 <script>
+// Tasas base de cuotas para CUBO (se les sumará el 12% de IVA en la función)
+const tasasCuboCuotas = {
+    "2": 0.074, "3": 0.079, "6": 0.094, "10": 0.097, "12": 0.105, 
+    "15": 0.125, "18": 0.145, "24": 0.1561, "36": 0.1661, "48": 0.1761
+};
+
+// Tasas de cuotas para RECURRENTE (tasas netas finales según tu instrucción)
+const tasasRecurrenteCuotas = {
+    "3": 0.08, "6": 0.09, "12": 0.10, "18": 0.14
+};
+
+function actualizarInterfaz() {
+    const tipoPago = document.getElementById('tipoPago').value;
+    const checkbox = document.getElementById('absorberComision');
+    const lblAbsorber = document.getElementById('lblAbsorber');
+    
+    if (tipoPago !== "contado") {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+        lblAbsorber.className = "checkbox-container checkbox-disabled";
+    } else {
+        checkbox.disabled = false;
+        lblAbsorber.className = "checkbox-container checkbox-active";
+    }
+    calcularMontos();
+}
+
 function calcularMontos() {
     const neto = parseFloat(document.getElementById('neto').value);
+    const tipoPago = document.getElementById('tipoPago').value;
     const absorber = document.getElementById('absorberComision').checked;
     
     const txtCubo = document.getElementById('txtCubo');
     const txtRecurrente = document.getElementById('txtRecurrente');
+    const mensualCubo = document.getElementById('mensualCubo');
+    const mensualRecurrente = document.getElementById('mensualRecurrente');
     const boxCubo = document.getElementById('resultadoCubo');
     const boxRecurrente = document.getElementById('resultadoRecurrente');
     const ahorroCubo = document.getElementById('ahorroCubo');
     const ahorroRecurrente = document.getElementById('ahorroRecurrente');
 
+    // Reset de la interfaz si el monto no es válido
     if (isNaN(neto) || neto <= 0) {
-        txtCubo.innerText = "Q0.00";
-        txtRecurrente.innerText = "Q0.00";
-        boxCubo.className = "result-box";
-        boxRecurrente.className = "result-box";
-        ahorroCubo.style.display = "none";
-        ahorroRecurrente.style.display = "none";
+        txtCubo.innerHTML = "Q0.00"; txtRecurrente.innerHTML = "Q0.00";
+        mensualCubo.innerText = ""; mensualRecurrente.innerText = "";
+        boxCubo.className = "result-box"; boxRecurrente.className = "result-box";
+        ahorroCubo.style.display = "none"; ahorroRecurrente.style.display = "none";
         return;
     }
 
-    let linkCubo, linkRecurrente;
+    let linkCubo = null;
+    let linkRecurrente = null;
 
-    if (absorber) {
-        linkCubo = neto / (1 - 0.035);          
-        linkRecurrente = (neto + 2.00) / (1 - 0.03); 
+    if (tipoPago === "contado") {
+        // Lógica de pago al contado original
+        if (absorber) {
+            linkCubo = neto / 0.965;          
+            linkRecurrente = (neto + 2.00) / 0.97; 
+        } else {
+            linkCubo = neto / 0.9441;
+            linkRecurrente = (neto + 2.00) / 0.955;
+        }
     } else {
-        linkCubo = neto / 0.9441;
-        linkRecurrente = (neto + 2.00) / 0.955;
+        // Lógica de pago en cuotas (Sin absorción)
+        
+        // 1. Cálculo de CUBO (Tasa + IVA del 12% sobre la tasa)
+        if (tasasCuboCuotas[tipoPago] !== undefined) {
+            const tasaBaseCubo = tasasCuboCuotas[tipoPago];
+            const tasaCuboConIva = tasaBaseCubo * 1.12;
+            linkCubo = neto / (1 - tasaCuboConIva);
+        }
+
+        // 2. Cálculo de RECURRENTE (Tasa directa)
+        if (tasasRecurrenteCuotas[tipoPago] !== undefined) {
+            const tasaRecurrente = tasasRecurrenteCuotas[tipoPago];
+            linkRecurrente = neto / (1 - tasaRecurrente);
+        }
     }
 
-    txtCubo.innerText = "Q" + linkCubo.toFixed(2);
-    txtRecurrente.innerText = "Q" + linkRecurrente.toFixed(2);
+    // Despliegue de datos de CUBO
+    if (linkCubo !== null) {
+        txtCubo.innerText = "Q" + linkCubo.toFixed(2);
+        if (tipoPago !== "contado") {
+            mensualCubo.innerText = "El cliente paga: " + tipoPago + " cuotas de Q" + (linkCubo / parseInt(tipoPago)).toFixed(2);
+        } else {
+            mensualCubo.innerText = "";
+        }
+    } else {
+        txtCubo.innerHTML = "<span class='not-available'>No disponible para esta cuota</span>";
+        mensualCubo.innerText = "";
+    }
 
+    // Despliegue de datos de RECURRENTE
+    if (linkRecurrente !== null) {
+        txtRecurrente.innerText = "Q" + linkRecurrente.toFixed(2);
+        if (tipoPago !== "contado") {
+            mensualRecurrente.innerText = "El cliente paga: " + tipoPago + " cuotas de Q" + (linkRecurrente / parseInt(tipoPago)).toFixed(2);
+        } else {
+            mensualRecurrente.innerText = "";
+        }
+    } else {
+        txtRecurrente.innerHTML = "<span class='not-available'>No disponible para esta cuota</span>";
+        mensualRecurrente.innerText = "";
+    }
+
+    // Clasificación visual y recomendación
     boxCubo.className = "result-box";
     boxRecurrente.className = "result-box";
     ahorroCubo.style.display = "none";
     ahorroRecurrente.style.display = "none";
 
-    if (linkCubo < linkRecurrente) {
+    if (linkCubo !== null && linkRecurrente !== null) {
+        if (linkCubo < linkRecurrente) {
+            boxCubo.className = "result-box recommended";
+            ahorroCubo.style.display = "block";
+        } else if (linkRecurrente < linkCubo) {
+            boxRecurrente.className = "result-box recommended";
+            ahorroRecurrente.style.display = "block";
+        }
+    } else if (linkCubo !== null) {
         boxCubo.className = "result-box recommended";
         ahorroCubo.style.display = "block";
-    } else if (linkRecurrente < linkCubo) {
+    } else if (linkRecurrente !== null) {
         boxRecurrente.className = "result-box recommended";
         ahorroRecurrente.style.display = "block";
     }
