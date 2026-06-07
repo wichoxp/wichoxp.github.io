@@ -9,66 +9,101 @@
         .card { background: white; max-width: 450px; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #1e293b; margin-top: 0; }
         label { display: block; margin: 15px 0 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .btn { width: 100%; background: #2563eb; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .btn:hover { background: #1d4ed8; }
-        .result-box { margin-top: 20px; padding: 15px; border-radius: 8px; background: #f8fafc; border-left: 5px solid #cbd5e1; }
+        input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .checkbox-container { display: flex; align-items: center; margin: 20px 0; background: #e2e8f0; padding: 12px; border-radius: 6px; cursor: pointer; }
+        .checkbox-container input { margin-right: 10px; transform: scale(1.2); cursor: pointer; }
+        .checkbox-container span { font-size: 14px; font-weight: bold; color: #334155; }
+        .result-box { margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8fafc; border-left: 5px solid #cbd5e1; transition: all 0.2s ease; }
         .recommended { border-left-color: #10b981; background: #f0fdf4; }
         .monto { font-size: 20px; font-weight: bold; color: #1e293b; }
-        .provider { font-weight: bold; color: #2563eb; }
+        .ahorro { display: block; font-size: 12px; color: #059669; margin-top: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Calculadora POS (Pequeño Contribuyente)</h2>
+    <h2>Calculadora POS Dinámica</h2>
     
     <label for="neto">¿Cuánto dinero deseas recibir neto? (Q):</label>
-    <input type="number" id="neto" placeholder="Ej. 150.00" step="0.01" min="0.01">
+    <input type="number" id="neto" placeholder="Ej. 150.00" step="0.01" min="0.01" autofocus oninput="calcularMontos()">
     
-    <button class="btn" onclick="calcularMontos()">Calcular Link de Pago</button>
+    <label class="checkbox-container">
+        <input type="checkbox" id="absorberComision" checked onchange="calcularMontos()">
+        <span>Absorber comisión (Bajar a CUBO 3.5% / RECURRENTE 3%)</span>
+    </label>
 
     <div id="resultadoCubo" class="result-box">
         <strong>CUBO POS:</strong><br>
         Monto a cobrar en el link: <span id="txtCubo" class="monto">Q0.00</span>
+        <span id="ahorroCubo" class="ahorro" style="display:none;">¡Opción más económica!</span>
     </div>
 
     <div id="resultadoRecurrente" class="result-box">
         <strong>RECURRENTE POS:</strong><br>
         Monto a cobrar en el link: <span id="txtRecurrente" class="monto">Q0.00</span>
+        <span id="ahorroRecurrente" class="ahorro" style="display:none;">¡Opción más económica!</span>
     </div>
 </div>
 
 <script>
 function calcularMontos() {
     const neto = parseFloat(document.getElementById('neto').value);
+    const absorber = document.getElementById('absorberComision').checked;
     
+    const txtCubo = document.getElementById('txtCubo');
+    const txtRecurrente = document.getElementById('txtRecurrente');
+    const boxCubo = document.getElementById('resultadoCubo');
+    const boxRecurrente = document.getElementById('resultadoRecurrente');
+    const ahorroCubo = document.getElementById('ahorroCubo');
+    const ahorroRecurrente = document.getElementById('ahorroRecurrente');
+
+    // Si el campo está vacío o es cero, limpiar la pantalla
     if (isNaN(neto) || neto <= 0) {
-        alert("Por favor, ingresa un monto válido mayor a 0.");
+        txtCubo.innerText = "Q0.00";
+        txtRecurrente.innerText = "Q0.00";
+        boxCubo.className = "result-box";
+        boxRecurrente.className = "result-box";
+        ahorroCubo.style.display = "none";
+        ahorroRecurrente.style.display = "none";
         return;
     }
 
-    // Fórmulas matemáticas despejadas
-    const linkCubo = neto / 0.9441;
-    const linkRecurrente = (neto + 2.00) / 0.955;
+    let linkCubo, linkRecurrente;
 
-    // Mostrar resultados en pantalla con dos decimales
-    document.getElementById('txtCubo').innerText = "Q" + linkCubo.toFixed(2);
-    document.getElementById('txtRecurrente').innerText = "Q" + linkRecurrente.toFixed(2);
+    if (absorber) {
+        // Comisiones reducidas solicitadas (3.5% y 3%)
+        linkCubo = neto / (1 - 0.035);          // neto / 0.965
+        linkRecurrente = (neto + 2.00) / (1 - 0.03); // (neto + 2) / 0.97
+    } else {
+        // Comisiones estándar originales
+        linkCubo = neto / 0.9441;
+        linkRecurrente = (neto + 2.00) / 0.955;
+    }
 
-    // Reiniciar estilos visuales de las cajas
-    const boxCubo = document.getElementById('resultadoCubo');
-    const boxRecurrente = document.getElementById('resultadoRecurrente');
+    // Mostrar montos formateados
+    txtCubo.innerText = "Q" + linkCubo.toFixed(2);
+    txtRecurrente.innerText = "Q" + linkRecurrente.toFixed(2);
+
+    // Reiniciar clases visuales
     boxCubo.className = "result-box";
     boxRecurrente.className = "result-box";
+    ahorroCubo.style.display = "none";
+    ahorroRecurrente.style.display = "none";
 
-    // Resaltar visualmente la opción más económica para tu cliente
+    // Resaltar la opción óptima para tu cliente
     if (linkCubo < linkRecurrente) {
         boxCubo.className = "result-box recommended";
+        ahorroCubo.style.display = "block";
     } else if (linkRecurrente < linkCubo) {
         boxRecurrente.className = "result-box recommended";
+        ahorroRecurrente.style.display = "block";
     }
 }
+
+// Asegurar que el cursor se active inmediatamente al abrir la pestaña
+window.onload = function() {
+    document.getElementById('neto').focus();
+};
 </script>
 
 </body>
