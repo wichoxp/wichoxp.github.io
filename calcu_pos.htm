@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora POS Guatemala</title>
+    <!-- Línea añadida para cargar el favicon desde el mismo directorio -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f9; padding: 20px; color: #333; }
         .card { background: white; max-width: 450px; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -57,7 +60,6 @@ function calcularMontos() {
     const ahorroCubo = document.getElementById('ahorroCubo');
     const ahorroRecurrente = document.getElementById('ahorroRecurrente');
 
-    // Si el campo está vacío o es cero, limpiar la pantalla
     if (isNaN(neto) || neto <= 0) {
         txtCubo.innerText = "Q0.00";
         txtRecurrente.innerText = "Q0.00";
@@ -71,26 +73,21 @@ function calcularMontos() {
     let linkCubo, linkRecurrente;
 
     if (absorber) {
-        // Comisiones reducidas solicitadas (3.5% y 3%)
-        linkCubo = neto / (1 - 0.035);          // neto / 0.965
-        linkRecurrente = (neto + 2.00) / (1 - 0.03); // (neto + 2) / 0.97
+        linkCubo = neto / (1 - 0.035);          
+        linkRecurrente = (neto + 2.00) / (1 - 0.03); 
     } else {
-        // Comisiones estándar originales
         linkCubo = neto / 0.9441;
         linkRecurrente = (neto + 2.00) / 0.955;
     }
 
-    // Mostrar montos formateados
     txtCubo.innerText = "Q" + linkCubo.toFixed(2);
     txtRecurrente.innerText = "Q" + linkRecurrente.toFixed(2);
 
-    // Reiniciar clases visuales
     boxCubo.className = "result-box";
     boxRecurrente.className = "result-box";
     ahorroCubo.style.display = "none";
     ahorroRecurrente.style.display = "none";
 
-    // Resaltar la opción óptima para tu cliente
     if (linkCubo < linkRecurrente) {
         boxCubo.className = "result-box recommended";
         ahorroCubo.style.display = "block";
@@ -100,7 +97,6 @@ function calcularMontos() {
     }
 }
 
-// Asegurar que el cursor se active inmediatamente al abrir la pestaña
 window.onload = function() {
     document.getElementById('neto').focus();
 };
