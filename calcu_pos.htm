@@ -36,8 +36,9 @@
     
     <label for="entorno">Canal de venta:</label>
     <select id="entorno" onchange="calcularMontos()">
+        <!-- Se añade el atributo 'selected' para que inicie por defecto en presencial -->
+        <option value="presencial" selected>Pago Presencial (POS Físico / QR)</option>
         <option value="link">Link de Pago (Virtual)</option>
-        <option value="presencial">Pago Presencial (POS Físico / QR)</option>
     </select>
 
     <label for="tipoPago">Modalidad de pago:</label>
@@ -152,7 +153,6 @@ function calcularMontos() {
 
         if (tasasRecurrenteCuotas[tipoPago] !== undefined) {
             const tasaRecurrente = tasasRecurrenteCuotas[tipoPago];
-            // Aplica la fórmula quitando o manteniendo los Q2 según el entorno seleccionado
             linkRecurrente = (neto + cargoFijoRecurrente) / (1 - tasaRecurrente);
         }
     }
