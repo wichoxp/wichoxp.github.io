@@ -11,8 +11,8 @@
         .card { background: white; max-width: 450px; margin: 0 auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #1e293b; margin-top: 0; }
         label { display: block; margin: 15px 0 5px; font-weight: bold; }
-        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fff; }
-        .checkbox-container { display: flex; align-items: center; margin: 20px 0; padding: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; background-color: #fff; margin-bottom: 10px; }
+        .checkbox-container { display: flex; align-items: center; margin: 15px 0; padding: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
         .checkbox-active { background: #e2e8f0; }
         .checkbox-disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
         .checkbox-container input { margin-right: 10px; transform: scale(1.2); cursor: pointer; }
@@ -34,6 +34,12 @@
     <label for="neto">¿Cuánto dinero deseas recibir neto? (Q):</label>
     <input type="number" id="neto" placeholder="Ej. 150.00" step="0.01" min="0.01" autofocus oninput="calcularMontos()">
     
+    <label for="entorno">Canal de venta:</label>
+    <select id="entorno" onchange="calcularMontos()">
+        <option value="link">Link de Pago (Virtual)</option>
+        <option value="presencial">Pago Presencial (POS Físico / QR)</option>
+    </select>
+
     <label for="tipoPago">Modalidad de pago:</label>
     <select id="tipoPago" onchange="actualizarInterfaz()">
         <option value="contado">Al Contado</option>
@@ -57,7 +63,7 @@
     <div id="resultadoCubo" class="result-box">
         <strong>CUBO POS:</strong><br>
         <div id="montoCuboContenedor">
-            Monto a cobrar en el link: <span id="txtCubo" class="monto">Q0.00</span>
+            Monto a cobrar al cliente: <span id="txtCubo" class="monto">Q0.00</span>
             <span id="mensualCubo" class="cuota-mensual"></span>
         </div>
         <span id="ahorroCubo" class="ahorro" style="display:none;">¡Opción más económica!</span>
@@ -66,7 +72,7 @@
     <div id="resultadoRecurrente" class="result-box">
         <strong>RECURRENTE POS:</strong><br>
         <div id="montoRecurrenteContenedor">
-            Monto a cobrar en el link: <span id="txtRecurrente" class="monto">Q0.00</span>
+            Monto a cobrar al cliente: <span id="txtRecurrente" class="monto">Q0.00</span>
             <span id="mensualRecurrente" class="cuota-mensual"></span>
         </div>
         <span id="ahorroRecurrente" class="ahorro" style="display:none;">¡Opción más económica!</span>
@@ -74,13 +80,11 @@
 </div>
 
 <script>
-// Tasas base de cuotas para CUBO (se les sumará el 12% de IVA en la función)
 const tasasCuboCuotas = {
     "2": 0.074, "3": 0.079, "6": 0.094, "10": 0.097, "12": 0.105, 
     "15": 0.125, "18": 0.145, "24": 0.1561, "36": 0.1661, "48": 0.1761
 };
 
-// Tasas de cuotas para RECURRENTE (tasas netas finales según tu instrucción)
 const tasasRecurrenteCuotas = {
     "3": 0.08, "6": 0.09, "12": 0.10, "18": 0.14
 };
@@ -103,6 +107,7 @@ function actualizarInterfaz() {
 
 function calcularMontos() {
     const neto = parseFloat(document.getElementById('neto').value);
+    const entorno = document.getElementById('entorno').value;
     const tipoPago = document.getElementById('tipoPago').value;
     const absorber = document.getElementById('absorberComision').checked;
     
@@ -115,7 +120,6 @@ function calcularMontos() {
     const ahorroCubo = document.getElementById('ahorroCubo');
     const ahorroRecurrente = document.getElementById('ahorroRecurrente');
 
-    // Reset de la interfaz si el monto no es válido
     if (isNaN(neto) || neto <= 0) {
         txtCubo.innerHTML = "Q0.00"; txtRecurrente.innerHTML = "Q0.00";
         mensualCubo.innerText = ""; mensualRecurrente.innerText = "";
@@ -127,33 +131,33 @@ function calcularMontos() {
     let linkCubo = null;
     let linkRecurrente = null;
 
+    // Configurar si aplica el cargo fijo de Q2 en Recurrente
+    const cargoFijoRecurrente = (entorno === "presencial") ? 0.00 : 2.00;
+
     if (tipoPago === "contado") {
-        // Lógica de pago al contado original
         if (absorber) {
             linkCubo = neto / 0.965;          
-            linkRecurrente = (neto + 2.00) / 0.97; 
+            linkRecurrente = (neto + cargoFijoRecurrente) / 0.97; 
         } else {
             linkCubo = neto / 0.9441;
-            linkRecurrente = (neto + 2.00) / 0.955;
+            linkRecurrente = (neto + cargoFijoRecurrente) / 0.955;
         }
     } else {
-        // Lógica de pago en cuotas (Sin absorción)
-        
-        // 1. Cálculo de CUBO (Tasa + IVA del 12% sobre la tasa)
+        // Cuotas (No absorción)
         if (tasasCuboCuotas[tipoPago] !== undefined) {
             const tasaBaseCubo = tasasCuboCuotas[tipoPago];
             const tasaCuboConIva = tasaBaseCubo * 1.12;
             linkCubo = neto / (1 - tasaCuboConIva);
         }
 
-        // 2. Cálculo de RECURRENTE (Tasa directa)
         if (tasasRecurrenteCuotas[tipoPago] !== undefined) {
             const tasaRecurrente = tasasRecurrenteCuotas[tipoPago];
-            linkRecurrente = neto / (1 - tasaRecurrente);
+            // Aplica la fórmula quitando o manteniendo los Q2 según el entorno seleccionado
+            linkRecurrente = (neto + cargoFijoRecurrente) / (1 - tasaRecurrente);
         }
     }
 
-    // Despliegue de datos de CUBO
+    // Despliegue CUBO
     if (linkCubo !== null) {
         txtCubo.innerText = "Q" + linkCubo.toFixed(2);
         if (tipoPago !== "contado") {
@@ -166,7 +170,7 @@ function calcularMontos() {
         mensualCubo.innerText = "";
     }
 
-    // Despliegue de datos de RECURRENTE
+    // Despliegue RECURRENTE
     if (linkRecurrente !== null) {
         txtRecurrente.innerText = "Q" + linkRecurrente.toFixed(2);
         if (tipoPago !== "contado") {
@@ -179,7 +183,7 @@ function calcularMontos() {
         mensualRecurrente.innerText = "";
     }
 
-    // Clasificación visual y recomendación
+    // Lógica visual de recomendación
     boxCubo.className = "result-box";
     boxRecurrente.className = "result-box";
     ahorroCubo.style.display = "none";
