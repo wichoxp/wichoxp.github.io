@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BI CUIK - Ingreso de Monto</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .phone-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Barra Superior Oficial */
+        .header-bar {
+            background-color: #003e6b;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        /* Estilo para los SVG limpios */
+        .svg-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            cursor: pointer;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .svg-icon:hover {
+            opacity: 0.8;
+        }
+
+        /* Área de Contenido */
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 24px 24px 24px;
+        }
+
+        .input-title {
+            color: #0c7697;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        /* Contenedor del Input Estilo ATM */
+        .input-wrapper {
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            border-bottom: 2px solid #0a4d7a;
+            padding-bottom: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Input nativo transparente encima */
+        .hidden-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 36px;
+            z-index: 2;
+        }
+
+        /* Visualización de monto centrada */
+        .display-amount {
+            font-size: 42px;
+            font-weight: bold;
+            color: #003e6b;
+            text-align: center;
+            white-space: nowrap;
+            user-select: none;
+            z-index: 1;
+        }
+
+        /* Parte Central: Resultado del cálculo */
+        .center-result {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+        }
+
+        .result-box {
+            display: none;
+            background-color: #f0f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #d0e3ec;
+            width: 100%;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0c7697;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .result-value:active {
+            transform: scale(0.98);
+        }
+
+        .copy-toast {
+            font-size: 13px;
+            color: #28a745;
+            margin-top: 6px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* Parte Inferior: Botón Confirmar */
+        .bottom-section {
+            padding: 24px;
+            width: 100%;
+        }
+
+        .btn-confirmar {
+            width: 100%;
+            background-color: #003e6b;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+
+        .btn-confirmar:hover {
+            background-color: #0a2d4a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- Barra superior exacta a la imagen -->
+        <div class="header-bar">
+            <span>Sin contacto</span>
+            <div class="header-icons">
+                <!-- Icono Campana (Notificaciones) -->
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+                <!-- Icono Cerrar Sesión (Puerta y Flecha) -->
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="content">
+            <span class="input-title">Ingresa el monto</span>
+            
+            <!-- Entrada formateada -->
+            <div class="input-wrapper">
+                <input type="tel" id="realInput" class="hidden-input" maxlength="10" placeholder="">
+                <div id="fakeDisplay" class="display-amount">GTQ 0.00</div>
+            </div>
+
+            <!-- Caja de resultados -->
+            <div class="center-result">
+                <div id="resultBox" class="result-box">
+                    <div class="result-label">Monto total con Servicio BI CUIK (1.5%)</div>
+                    <div id="totalValue" class="result-value" onclick="copiarMontoPuro()" title="Clic para copiar">0.00</div>
+                    <div id="toast" class="copy-toast">¡Valor copiado al portapapeles!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Inferior -->
+        <div class="bottom-section">
+            <button class="btn-confirmar" onclick="realizarCalculo()">Confirmar</button>
+        </div>
+
+    </div>
+
+    <script>
+        const realInput = document.getElementById('realInput');
+        const fakeDisplay = document.getElementById('fakeDisplay');
+        const resultBox = document.getElementById('resultBox');
+        const totalValue = document.getElementById('totalValue');
+        const toast = document.getElementById('toast');
+
+        let rawDigits = "";
+        let calculadoPuro = "0.00";
+
+        // Captura el valor e introduce números de derecha a izquierda
+        realInput.addEventListener('input', (e) => {
+            rawDigits = e.target.value.replace(/\D/g, '');
+            
+            if(rawDigits.length > 0) {
+                rawDigits = parseInt(rawDigits, 10).toString();
+            }
+
+            if (!rawDigits || rawDigits === "0") {
+                fakeDisplay.innerText = "GTQ 0.00";
+                e.target.value = "";
+                return;
+            }
+
+            const floatAmount = parseFloat(rawDigits) / 100;
+            
+            fakeDisplay.innerText = "GTQ " + floatAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        });
+
+        // Operación matemática (+ 1.5%)
+        function realizarCalculo() {
+            if (!rawDigits || rawDigits === "0") {
+                alert("Por favor, ingrese un monto primero.");
+                return;
+            }
+
+            const montoOriginal = parseFloat(rawDigits) / 100;
+            const montoFinal = montoOriginal * 1.015;
+            
+            calculadoPuro = montoFinal.toFixed(2);
+
+            totalValue.innerText = "GTQ " + parseFloat(calculadoPuro).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            resultBox.style.display = "block";
+            toast.style.opacity = "0"; 
+        }
+
+        // Copiar exclusivamente los dígitos al portapapeles
+        function copiarMontoPuro() {
+            navigator.clipboard.writeText(calculadoPuro).then(() => {
+                toast.style.opacity = "1";
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                }, 2000);
+            }).catch(err => {
+                console.error("No se pudo copiar el elemento: ", err);
+            });
+        }
+    </script>
+</body>
+</html>
