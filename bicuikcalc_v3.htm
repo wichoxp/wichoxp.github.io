@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BI CUIK - Cobros</title>
+    <style>
+        /* Reset completo para eliminar bordes y márgenes laterales */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Barra de herramientas superior de borde a borde */
+        .header {
+            background-color: #003a70;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            font-size: 18px;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-icons svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        /* Contenedor principal sin restricciones laterales */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 40px 0px;
+            position: relative;
+        }
+
+        .instruction {
+            color: #2b708d;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        /* Campo de entrada de dinero */
+        .amount-input-container {
+            width: 90%;
+            max-width: 500px;
+            border-bottom: 2px solid #003a70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 8px;
+            margin-bottom: 30px;
+        }
+
+        .currency-label {
+            font-size: 42px;
+            font-weight: bold;
+            color: #003a70;
+            margin-right: 8px;
+        }
+
+        .amount-input {
+            font-size: 42px;
+            font-weight: bold;
+            color: #003a70;
+            border: none;
+            outline: none;
+            width: 180px;
+            text-align: left;
+            background: transparent;
+        }
+
+        /* Panel Central de Resultados */
+        .result-panel {
+            width: 90%;
+            max-width: 450px;
+            background-color: #f4f7f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none; /* Oculto inicialmente */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .result-row.total-row {
+            border-top: 1px dashed #ccc;
+            padding-top: 12px;
+            margin-bottom: 0;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 6px;
+            padding: 12px 8px 6px 8px;
+        }
+
+        .result-row.total-row:active {
+            background-color: #e2e8f0;
+        }
+
+        .total-label {
+            font-weight: bold;
+            color: #003a70;
+            font-size: 18px;
+        }
+
+        .total-value {
+            font-weight: bold;
+            color: #003a70;
+            font-size: 22px;
+        }
+
+        /* Contenedor del botón inferior pegado a los bordes de la pantalla */
+        .footer {
+            width: 100%;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            max-width: 600px;
+            background-color: #003a70;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .confirm-btn:active {
+            background-color: #002548;
+        }
+
+        /* Notificación Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <div class="header">
+        <div>Sin contacto</div>
+        <div class="header-icons">
+            <!-- Icono Campana -->
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1-1.5-1s-1.5.17-1.5 1v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <!-- Icono Salir -->
+            <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+    </div>
+
+    <!-- Área de Trabajo -->
+    <div class="main-container">
+        <div class="instruction">Ingresa el monto</div>
+        
+        <div class="amount-input-container">
+            <span class="currency-label">GTQ</span>
+            <input type="number" id="monto" class="amount-input" placeholder="0.00" step="0.01" min="0">
+        </div>
+
+        <!-- Panel de cálculos detallados -->
+        <div class="result-panel" id="panelResultado">
+            <div class="result-row">
+                <span>Monto base:</span>
+                <span id="resBase">GTQ 0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Servicio BI CUIK (1.5%):</span>
+                <span id="resComision">GTQ 0.00</span>
+            </div>
+            <div class="result-row total-row" id="totalClickable" title="Presiona para copiar el valor">
+                <span class="total-label">Monto Total:</span>
+                <span class="total-value" id="resTotal">GTQ 0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Inferior -->
+    <div class="footer">
+        <button class="confirm-btn" onclick="calcularMonto()">Confirmar</button>
+    </div>
+
+    <!-- Alerta Flotante -->
+    <div class="toast" id="toast">¡Valor copiado al portapapeles!</div>
+
+    <script>
+        let valorParaCopiar = "0.00";
+
+        function calcularMonto() {
+            const inputMonto = document.getElementById('monto').value;
+            const montoBase = parseFloat(inputMonto);
+
+            if (isNaN(montoBase) || montoBase <= 0) {
+                alert("Por favor, ingresa un monto válido.");
+                return;
+            }
+
+            // Operaciones matemáticas
+            const comision = montoBase * 0.015;
+            const montoTotal = montoBase + comision;
+
+            // Almacenar el string puro sin letras para el portapapeles
+            valorParaCopiar = montoTotal.toFixed(2);
+
+            // Renderizar datos en pantalla
+            document.getElementById('resBase').innerText = "GTQ " + montoBase.toFixed(2);
+            document.getElementById('resComision').innerText = "GTQ " + comision.toFixed(2);
+            document.getElementById('resTotal').innerText = "GTQ " + valorParaCopiar;
+
+            // Desplegar el panel central animado
+            document.getElementById('panelResultado').style.display = 'block';
+        }
+
+        // Listener para la acción de copiado rápido al presionar sobre el total
+        document.getElementById('totalClickable').addEventListener('click', function() {
+            if (valorParaCopiar === "0.00") return;
+
+            navigator.clipboard.writeText(valorParaCopiar).then(() => {
+                const toast = document.getElementById('toast');
+                toast.style.display = 'block';
+                
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al intentar copiar al portapapeles: ', err);
+            });
+        });
+    </script>
+</body>
+</html>
